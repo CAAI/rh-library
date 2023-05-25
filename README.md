@@ -12,4 +12,4 @@ Tools developed by members of CAAI, packaged in rh-node.
 Other tools, packaged in rh-node. 
 | **node** | **description** | **dependencies** | **project** |
 |---|---|---|---|
-| [hdbet](nodes/hdbet) | MRI brain extraction | hdbet |  |
+| [hdbet](nodes/hdbet) | MRI brain extraction |  |  |

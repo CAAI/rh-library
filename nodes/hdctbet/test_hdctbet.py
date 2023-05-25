@@ -6,7 +6,7 @@ from rhnode import NodeRunner, new_job
 # 3. Start the node with NodeRunner
 # 4. Either wait for the node to finish or stop the node
 
-# Inputs to HDBET
+# Inputs to HDCTBET
 data = {
     "ct": "/homes/claes/projects/CTBET/imagesTs/FET_004_0000.nii.gz"
 }
@@ -27,34 +27,30 @@ data = {
 
 # NOTE: manager_adress and host/port are mutually exclusive.
 
-nodes = []
-for _ in range(10):
-    job = new_job(check_cache=False) 
-    node = NodeRunner(
-        identifier="hdctbet",
-        inputs = data,
-        manager_adress="titan6:9050",
-        job = job,
-    )
+job = new_job(check_cache=False) 
+job.device=0
+node = NodeRunner(
+    identifier="hdctbet",
+    inputs = data,
 
-    #Queue the node for execution
-    node.start()
+    #manager_adress="localhost:8010",
+    host='localhost',
+    port=8010,
+    resources_included=True,
 
-    #Save a reference to the node
-    nodes.append(node)
+    job = job,
+)
 
-# wait for each node to finish and save the output
-for node in nodes:
-    
-    # Saves files in cwd/node_name_[i]/}
-    output = node.wait_for_finish()
-    print(output)
+#Queue the node for execution
+node.start()
 
+   
+# Saves files in cwd/node_name_[i]/}
+output = node.wait_for_finish()
+print(output)
 
 # check the status of the node in the manager queue at http://hostname:9050/manager
 # check the status of the node job at http://hostname:9050/{identifier}
 
 # alternatively, stop all the nodes 
-#
-# for node in nodes:
-#     node.stop()
+# node.stop()

@@ -1,5 +1,5 @@
 # rh-library
-A collection of deployment ready machine learning tools developed by CAAI. Each model is packaged in rh-node to enable easy deployment with docker
+A collection of deployment ready machine learning tools developed by CAAI. Each model is packaged in rh-node to enable easy deployment with docker.
 
 ## CAAI Nodes
 Tools developed by members of CAAI, packaged in rh-node. 
@@ -12,4 +12,4 @@ Tools developed by members of CAAI, packaged in rh-node.
 Other tools, packaged in rh-node. 
 | **node** | **description** | **dependencies** | **project** |
 |---|---|---|---|
-| [hdbet](nodes/hdbet) | MRI brain extraction |  |  |
+| [hdbet](nodes/hdbet) | MRI brain extraction |  | https://github.com/MIC-DKFZ/HD-BET |

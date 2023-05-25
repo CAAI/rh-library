@@ -7,12 +7,12 @@ RUN apt-get install git -y
 RUN pip install git+https://github.com/CAAI/rh-node.git
 
 # HD-CTBET
-RUN git clone https://github.com/CAAI/HD-CTBET
-RUN pip install ./HD-CTBET
-RUN python -c "from HD_CTBET import utils; [utils.maybe_download_parameters(i) for i in range(5)]"
+#RUN git clone https://github.com/CAAI/HD-CTBET
+#RUN pip install ./HD-CTBET
+#RUN python -c "from HD_CTBET import utils; [utils.maybe_download_parameters(i) for i in range(5)]"
 
 #Changes frequently
-COPY hdctbet.py /app
-WORKDIR /app
+#COPY hdctbet.py /app
+#WORKDIR /app
 
-CMD ["uvicorn", "hdctbet:app", "--host", "0.0.0.0", "--port", "8000"]
+#CMD ["uvicorn", "hdctbet:app", "--host", "0.0.0.0", "--port", "8000"]

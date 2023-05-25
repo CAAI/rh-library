@@ -12,7 +12,7 @@ RUN pip install ./HD-CTBET
 RUN python -c "from HD_CTBET import utils; [utils.maybe_download_parameters(i) for i in range(5)]"
 
 #Changes frequently
-COPY hdctbet.py /app
+COPY hdctbet.py /app/hdctbet.py
 WORKDIR /app
 
 CMD ["uvicorn", "hdctbet:app", "--host", "0.0.0.0", "--port", "8000"]

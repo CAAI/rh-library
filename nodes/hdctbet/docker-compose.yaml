@@ -4,6 +4,8 @@ services:
   hdctbet:
     image: rhnode/hdctbet:latest
     build: .
+    ports:
+      - "8010:8000"
     deploy:
       resources:
         reservations:

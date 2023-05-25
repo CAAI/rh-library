@@ -33,8 +33,8 @@ node = NodeRunner(
     identifier="hdctbet",
     inputs = data,
 
-    #manager_adress="localhost:8010",
-    host='localhost',
+    #manager_adress="titan6.petnet.rh.dk:8010",
+    host='titan6.petnet.rh.dk',
     port=8010,
     resources_included=True,
 

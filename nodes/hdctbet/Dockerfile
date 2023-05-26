@@ -7,7 +7,8 @@ RUN apt-get install git -y
 RUN pip install git+https://github.com/CAAI/rh-node.git
 
 # HD-CTBET
-RUN git clone https://github.com/CAAI/HD-CTBET
+ADD https://api.github.com/repos/CAAI/HD-CTBET/git/refs/heads/master version.json
+RUN git clone -b master https://github.com/CAAI/HD-CTBET
 RUN pip install ./HD-CTBET
 RUN python -c "from HD_CTBET import utils; [utils.maybe_download_parameters(i) for i in range(5)]"
 

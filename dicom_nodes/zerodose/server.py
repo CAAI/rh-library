@@ -13,7 +13,7 @@ from dicomnode.lib.dicom_factory import AttributeElement, InstanceEnvironment, F
   image_plane_blueprint
 from dicomnode.lib.numpy_factory import image_pixel_blueprint
 # #import PipelineOutput
-from rhnode import new_job, NodeRunner
+from rhnode import RHJob
 
 class PETInput(AbstractInput):
     image_grinder = NiftiGrinder()
@@ -57,20 +57,19 @@ class ZerodosePipeline(AbstractPipeline):
 
     def process(self, input_container: InputContainer) -> PipelineOutput:
         
-        job = new_job("zerodose")
-        PET_PATH = job.directory / "pet.nii.gz"
-        MR_PATH = job.directory / "mr.nii.gz"
+        PET_PATH =  "pet.nii.gz"
+        MR_PATH = "mr.nii.gz"
         nib.save(input_container['PET'], PET_PATH)
         nib.save(input_container['MR'], MR_PATH)
 
-        zerodose = NodeRunner("zerodose", {"pet": PET_PATH, "mr": MR_PATH}, job)
+        zerodose = RHJob("zerodose", {"pet": PET_PATH, "mr": MR_PATH})
         zerodose.start()
         output = zerodose.wait_for_finish()
         sbPET = nib.load(output["sb_pet"])
        
         series = self.dicom_factory.build_from_header(input_container.header,sbPET)
 
-        file_output = FileOutput([(Path(job.directory/"sbpet"), series)])
+        #TODO: file_output = FileOutput([(Path(job.directory/"sbpet"), series)])
 
         return file_output    
         #return DicomOutput([(self.endpoint, series)], self.ae_title)

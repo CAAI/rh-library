@@ -1,0 +1,2 @@
+dicom2nifti
+git+https://github.com/Rigshospitalet-KFNM/DicomNode.git

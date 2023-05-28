@@ -16,10 +16,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:latest
-    build: 
-      context: ../
-      dockerfile: nodes/manager/Dockerfile
+    image: rhnode/manager:1.0.0
 
     expose:
     - "8000"
@@ -28,11 +25,11 @@ services:
       - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
 
     environment:
-      RH_OTHER_ADDRESSES: "mydomain:9050"
+      #RH_OTHER_ADDRESSES: "mydomain:9050"
       RH_NAME: "myhost"
-      RH_MEMORY: 32
+      RH_MEMORY: 12
       RH_GPU_MEM: "8"
-      RH_PROCESSES: 16
+      RH_NUM_THREADS: 6
 
 
   #HD BET Node
@@ -48,18 +45,19 @@ services:
               capabilities: [gpu]
     expose:
       - "8000"
-      
+
     labels:
       - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
-    
+
   #Zerodose Node
   zerodose:
-    image: rhnode/zerodose:latest
+    image: rhnode/zerodose:1.0.0
 
-    build: 
+    build: .
 
     labels:
       - "traefik.http.routers.zerodose.rule=PathPrefix(`/zerodose`)"
+
     deploy:
       resources:
         reservations:
@@ -67,4 +65,8 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-              
+    environment:
+      RH_EMAIL_ON_ERROR: christian.hinge@regionh.dk
+
+    expose:
+      - "8000"

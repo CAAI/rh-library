@@ -1,4 +1,4 @@
-from rhnode import NodeRunner, new_job
+from rhnode import RHJob
 
 # Steps:
 # 1. Define the inputs to the node you wish to run
@@ -27,24 +27,19 @@ data = {
 
 # NOTE: manager_adress and host/port are mutually exclusive.
 
-job = new_job(check_cache=False) 
-job.device=0
-node = NodeRunner(
-    identifier="hdctbet",
+node = RHJob(
+    node_name="hdctbet",
     inputs = data,
 
     #manager_adress="titan6.petnet.rh.dk:8010",
-    host='titan6.petnet.rh.dk',
-    port=8010,
+    node_address="titan6.petnet.rh.dk:8010",
     resources_included=True,
-
-    job = job,
+    included_cuda_device=0,
 )
 
 #Queue the node for execution
 node.start()
 
-   
 # Saves files in cwd/node_name_[i]/}
 output = node.wait_for_finish()
 print(output)

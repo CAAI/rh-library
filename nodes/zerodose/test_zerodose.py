@@ -1,17 +1,14 @@
-from rhnode import NodeRunner, new_job
+from rhnode import RHJob
 
 data = {
-    "pet": "/homes/hinge/Projects/rh-node/test/mr.nii.gz",
-    "mr": "/homes/hinge/Projects/rh-node/test/mr.nii.gz"
+    "pet": "/homes/hinge/Projects/rh-node/tests/data/mr.nii.gz",
+    "mr": "/homes/hinge/Projects/rh-node/tests/data/mr.nii.gz"
 }
 
-job = new_job(check_cache=False)
-
-node = NodeRunner(
-    identifier="zerodose",
-    manager_adress="peyo:9050",
+node = RHJob(
+    node_name="zerodose",
+    #node_adress="localhost:8009",
     inputs = data,
-    job = job,
 )
 node.start()
 node.wait_for_finish()

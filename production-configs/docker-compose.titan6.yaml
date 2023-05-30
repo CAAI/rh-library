@@ -32,7 +32,7 @@ services:
       RH_NAME: "titan6"
       RH_MEMORY: 12
       RH_GPU_MEM: "12"
-      RH_PROCESSES: 8
+      RH_NUM_THREADS: 8
 
   ## Test node
   testnode:

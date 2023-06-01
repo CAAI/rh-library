@@ -15,6 +15,8 @@ from dicomnode.lib.numpy_factory import image_pixel_blueprint
 # #import PipelineOutput
 from rhnode import RHJob
 
+#storescu --scan-directories -nh -xs --recurse -aec $YourAETitle $localhost $port $path/to/dicoms
+
 class PETInput(AbstractInput):
     image_grinder = NiftiGrinder()
     required_values = {
@@ -68,10 +70,8 @@ class ZerodosePipeline(AbstractPipeline):
         sbPET = nib.load(output["sb_pet"])
        
         series = self.dicom_factory.build_from_header(input_container.header,sbPET)
-
-        #TODO: file_output = FileOutput([(Path(job.directory/"sbpet"), series)])
-
-        return file_output    
+        
+        return FileOutput([(Path("sbpet"), series)])    
         #return DicomOutput([(self.endpoint, series)], self.ae_title)
 
 if __name__ == '__main__':

@@ -32,7 +32,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: {{defaultContext}}:nodes/zerodose
+          context: "{{defaultContext}}:nodes/zerodose"
           push: true
           tags: rhnode/zerodose:${{ steps.split.outputs.version }}
           

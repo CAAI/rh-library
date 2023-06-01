@@ -8,14 +8,14 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.event.release.tag_name, 'zerodose/') }}
+    if: ${{ startsWith(github.event.release.tag_name, 'zerodose-') }}
     
     steps:
       - name: Split branch name
         env:
           TAG_NAME: ${{ github..event.release.tag_name }}
         id: split
-        run: echo "::set-output name=version::${TAG_NAME##*/}"
+        run: echo "::set-output name=version::${TAG_NAME##*-}"
       - 
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2

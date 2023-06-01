@@ -34,5 +34,5 @@ jobs:
         with:
           context: nodes/zerodose
           push: true
-          tags: rhnode/zerodose:${{ version }}
+          tags: rhnode/zerodose:${{ steps.split.outputs.version }}
           

@@ -5,15 +5,13 @@ RUN apt-get install build-essential -y
 RUN apt-get install git -y
 RUN pip install --upgrade pip
 
+# RH-Node
+RUN pip install git+https://github.com/CAAI/rh-node.git@1.1.0
+
 # General requirements
-ADD https://api.github.com/repos/CAAI/zerodose/git/refs/heads/main version_zerodose.json
-RUN pip install git+https://github.com/CAAI/zerodose.git
+RUN pip install git+https://github.com/CAAI/zerodose.git@c9627e6cad25e08fabeaee0baeb16c5fa246f3ba
 RUN python -c "from zerodose import utils; utils._maybe_download_parameters(); utils._maybe_download_mni_template()"
 RUN pip install -U numpy
-
-# RH-Node
-ADD https://api.github.com/repos/CAAI/rh-node/git/refs/heads/main version_rhnode.json
-RUN pip install git+https://github.com/CAAI/rh-node.git
 
 # Changes frequently
 COPY zerodose.py /app/zerodose.py

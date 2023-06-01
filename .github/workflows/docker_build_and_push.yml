@@ -15,10 +15,9 @@ jobs:
           {release_identifier: zerodose_dicom, dir: dicom_nodes/zerodose, image_name: zerodose_dicom}, 
           {release_identifier: zerodose, dir: nodes/zerodose, image_name: zerodose}, 
           {release_identifier: hdbet, dir: nodes/hdbet, image_name: hdbet}, 
-
         ]
 
-    if: ${{ startsWith(github.event.release.tag_name, '{{matrix.node.release_identifier}}-') }}
+    #if: ${{ startsWith(github.event.release.tag_name, '{{matrix.node.release_identifier}}-') }}
 
     steps:
       - name: Split branch name

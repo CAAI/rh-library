@@ -15,10 +15,9 @@ jobs:
           {release_identifier: zerodose_dicom, dir: dicom_nodes/zerodose, image_name: zerodose_dicom}, 
           {release_identifier: zerodose, dir: nodes/zerodose, image_name: zerodose}, 
           {release_identifier: hdbet, dir: nodes/hdbet, image_name: hdbet}, 
-
         ]
 
-    if: ${{ startsWith(github.event.release.tag_name, '{{matrix.node.release_identifier}}-') }}
+    if: ${{ startsWith(github.event.release.tag_name, '${{matrix.node.release_identifier}}-') }}
 
     steps:
       - name: Split branch name
@@ -42,7 +41,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: "{{defaultContext}}:{{matrix.node.dir}}"
+          context: "{{defaultContext}}:${{matrix.node.dir}}"
           push: true
-          tags: rhnode/{{matrix.node.image_name}}:${{ steps.split.outputs.version }}
+          tags: rhnode/${{matrix.node.image_name}}:${{ steps.split.outputs.version }}
           

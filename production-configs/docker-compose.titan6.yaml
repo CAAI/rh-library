@@ -32,7 +32,7 @@ services:
       RH_NAME: "titan6"
       RH_MEMORY: 12
       RH_GPU_MEM: "12"
-      RH_PROCESSES: 8
+      RH_NUM_THREADS: 8
 
   ## Test node
   testnode:
@@ -68,6 +68,27 @@ services:
       
     labels:
       - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
+
+  #HD CT BET Node
+  hdctbet:
+    image: rhnode/hdctbet:latest
+
+    build: 
+      context: ../
+      dockerfile: nodes/hdctbet/Dockerfile
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+      
+    labels:
+      - "traefik.http.routers.hdctbet.rule=PathPrefix(`/hdctbet`)"
     
   #Zerodose Node
   zerodose:
@@ -87,14 +108,4 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-              
-  addnode:
-    image: rhnode/addnode:latest
-    build: 
-      context: ../
-      dockerfile: nodes/addnode/Dockerfile
-    expose:
-      - "8000"
-    labels:
-      - "traefik.http.routers.addnode.rule=PathPrefix(`/add`)"
 

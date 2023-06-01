@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Split branch name
         env:
-          TAG_NAME: ${{ github..event.release.tag_name }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
         id: split
         run: echo "::set-output name=version::${TAG_NAME##*-}"
       - 

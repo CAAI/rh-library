@@ -16,7 +16,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:latest
+    image: rhnode/manager:1.1.0
     build: 
       context: ../
       dockerfile: nodes/manager/Dockerfile
@@ -36,7 +36,6 @@ services:
 
   #HD BET Node
   hdbet:
-    image: rhnode/hdbet:latest
     build:
     deploy:
       resources:

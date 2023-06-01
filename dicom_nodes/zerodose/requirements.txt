@@ -1,0 +1,3 @@
+dicom2nifti
+git+https://github.com/Rigshospitalet-KFNM/DicomNode.git
+git+https://github.com/CAAI/rh-node.git@1.1.0

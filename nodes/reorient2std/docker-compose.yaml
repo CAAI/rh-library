@@ -1,0 +1,19 @@
+version: "1"
+services:
+
+  reorient2std:
+    image: rhnode/reorient2std:latest
+    build: .
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: []
+    expose:
+      - "8000"
+      
+    labels:
+      - "traefik.http.routers.reorient2std.rule=PathPrefix(`/reorient2std`)"
+  

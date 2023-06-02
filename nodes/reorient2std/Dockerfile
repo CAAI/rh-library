@@ -83,9 +83,8 @@ RUN printf '{ \
 }' > /.reproenv.json
 # End saving to specification to JSON.
 
-#General requirements
-ADD https://api.github.com/repos/CAAI/rh-node/git/refs/heads/main version_rhnode.json
-RUN pip install git+https://github.com/CAAI/rh-node.git
+# RH-Node
+RUN pip install git+https://github.com/CAAI/rh-node.git@1.1.0
 
 #Unique to project requirements
 COPY reorient2std.py /app/reorient2std.py

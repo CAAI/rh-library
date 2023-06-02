@@ -13,6 +13,9 @@ services:
               capabilities: []
     expose:
       - "8000"
+    
+    ports:
+      - "8010:8000"
       
     labels:
       - "traefik.http.routers.reorient2std.rule=PathPrefix(`/reorient2std`)"

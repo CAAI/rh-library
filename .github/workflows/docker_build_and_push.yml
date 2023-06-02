@@ -16,13 +16,13 @@ jobs:
           {release_identifier: 'zerodose-', dir: nodes/zerodose, image_name: zerodose}, 
           {release_identifier: 'hdbet-', dir: nodes/hdbet, image_name: hdbet}, 
         ]
-
+        
+    if: ${{startsWith(github.event.release.tag_name, 'matrix.node.release_identifier' )}}$
     
     steps:
       - name: Echo expression
         run: echo "startsWith(github.event.release.tag_name, '${{matrix.node.release_identifier}}' )"
       - name: check if statement
-        if: ${{startsWith(github.event.release.tag_name, 'matrix.node.release_identifier' )}}$
         run: echo "success!"
       - name: Split branch name
         env:

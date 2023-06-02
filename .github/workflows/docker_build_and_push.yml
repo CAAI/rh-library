@@ -9,14 +9,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node: [ 
-          {release_identifier: 'zerodose_dicom-', dir: dicom_nodes/zerodose, image_name: zerodose_dicom}, 
-          {release_identifier: 'zerodose-', dir: nodes/zerodose, image_name: zerodose}, 
-          {release_identifier: 'hdbet-', dir: nodes/hdbet, image_name: hdbet}, 
-        ]
-
     steps:
       - name: Identify node
         id: step1
@@ -26,33 +18,42 @@ jobs:
           if [[ "$VAL" == zerodose-* ]]; then
             echo "::set-output name=dir::nodes/zerodose"
             echo "::set-output name=image_name::zerodose"
-            echo "success!!!!"
+          elif [[ "$VAL" == hdbet-* ]]; then
+            echo "::set-output name=dir::nodes/hdbet"
+            echo "::set-output name=image_name::hdbet"
+          elif [[ "$VAL" == zerodose_dicom-* ]]; then
+            echo "::set-output name=dir::dicom_nodes/zerodose"
+            echo "::set-output name=image_name::zerodose_dicom"
           else
             echo "::set-output name=valid::false"
-            echo "FAILURE"
           fi
       - name: Split branch name
+        if : steps.step1.outputs.valid == "true"
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
         id: split
         run: echo "::set-output name=version::${TAG_NAME##*-}"
       - 
         name: Set up QEMU
+        if : steps.step1.outputs.valid == "true"
         uses: docker/setup-qemu-action@v2
       -
         name: Set up Docker Buildx
+        if : steps.step1.outputs.valid == "true"
         uses: docker/setup-buildx-action@v2
       -
         name: Login to Docker Hub
+        if : steps.step1.outputs.valid == "true"
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
+        if : steps.step1.outputs.valid == "true"
         uses: docker/build-push-action@v4
         with:
-          context: "{{defaultContext}}:${{matrix.node.dir}}"
+          context: "{{defaultContext}}:${{steps.step1.outputs.dir}}"
           push: true
-          tags: rhnode/${{matrix.node.image_name}}:${{ steps.split.outputs.version }}
+          tags: rhnode/${{steps.step1.outputs.image_name}}:${{ steps.split.outputs.version }}
           

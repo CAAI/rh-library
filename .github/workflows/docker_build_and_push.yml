@@ -28,29 +28,29 @@ jobs:
             echo "::set-output name=valid::false"
           fi
       - name: Split branch name
-        if : ${{steps.step1.outputs.valid == "true"}}
+        if : ${{steps.step1.outputs.valid == 'true'}}
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
         id: split
         run: echo "::set-output name=version::${TAG_NAME##*-}"
       - 
         name: Set up QEMU
-        if : ${{steps.step1.outputs.valid == "true"}}
+        if : ${{steps.step1.outputs.valid == 'true'}}
         uses: docker/setup-qemu-action@v2
       -
         name: Set up Docker Buildx
-        if : ${{steps.step1.outputs.valid == "true"}}
+        if : ${{steps.step1.outputs.valid == 'true'}}
         uses: docker/setup-buildx-action@v2
       -
         name: Login to Docker Hub
-        if : ${{steps.step1.outputs.valid == "true"}}
+        if : ${{steps.step1.outputs.valid == 'true'}}
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
-        if : ${{steps.step1.outputs.valid == "true"}}
+        if : ${{steps.step1.outputs.valid == 'true'}}
         uses: docker/build-push-action@v4
         with:
           context: "{{defaultContext}}:${{steps.step1.outputs.dir}}"

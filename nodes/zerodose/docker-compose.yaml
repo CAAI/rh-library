@@ -16,7 +16,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:1.0.0
+    image: rhnode/manager:1.1.0
 
     expose:
     - "8000"
@@ -49,12 +49,9 @@ services:
     labels:
       - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
 
-  #Zerodose Node
+  #Zerodose Node 
   zerodose:
-    image: rhnode/zerodose:1.0.0
-
     build: .
-
     labels:
       - "traefik.http.routers.zerodose.rule=PathPrefix(`/zerodose`)"
 

@@ -17,24 +17,20 @@ jobs:
           {release_identifier: 'hdbet-', dir: nodes/hdbet, image_name: hdbet}, 
         ]
 
-    if: startsWith(github.event.release.tag_name, matrix.node.release_identifier )
-    
     steps:
-      - name: Echo expression
-        run: echo "startsWith(github.event.release.tag_name, '${{matrix.node.release_identifier}}' )"
-
-      - name: check if statement 1
-        if: ${{startsWith(github.event.release.tag_name, 'matrix.node.release_identifier' )}}$
-        run: echo "success!"
-
-      - name: check if statement 2
-        if: ${{startsWith(github.event.release.tag_name, matrix.node.release_identifier )}}$
-        run: echo "success!"
-      
-      - name: check if statement 4
-        if: startsWith(github.event.release.tag_name, 'matrix.node.release_identifier' )
-        run: echo "success!"
-
+      - name: Identify node
+        id: step1
+        run: |
+          VAL=${{github.event.release.tag_name}}
+          echo "::set-output name=valid::true"
+          if [[ "$VAL" == zerodose-* ]]; then
+            echo "::set-output name=dir::nodes/zerodose"
+            echo "::set-output name=image_name::zerodose"
+            echo "success!!!!"
+          else
+            echo "::set-output name=valid::false"
+            echo "FAILURE"
+          fi
       - name: Split branch name
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}

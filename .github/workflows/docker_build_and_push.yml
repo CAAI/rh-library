@@ -19,8 +19,10 @@ jobs:
 
     
     steps:
+      - name: Echo expression
+        run: echo "startsWith(github.event.release.tag_name, '${{matrix.node.release_identifier}}' )"
+
       - name: Split branch name
-        if: ${{ startsWith(github.event.release.tag_name, '${{matrix.node.release_identifier}}' ) }}
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
         id: split

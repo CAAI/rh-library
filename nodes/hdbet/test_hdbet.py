@@ -1,4 +1,4 @@
-from rhnode import NodeRunner, new_job
+from rhnode import RHJob
 
 # Steps:
 # 1. Define the inputs to the node you wish to run
@@ -8,33 +8,21 @@ from rhnode import NodeRunner, new_job
 
 # Inputs to HDBET
 data = {
-    "mr": "/homes/hinge/Projects/rh-node/test/mr.nii.gz"
+    "mr": "/homes/hinge/Projects/rh-node/tests/data/mr.nii.gz"
 }
 
-# JOB parameters
-#new_job parameters:
-#   check_cache=True - If true, will return the cached result if it exists
-#   save_to_cache=True - If true, will save the result to the cache. 
-#   priority=[1..5]
-#   name="job_name"
-
-
-### NodeRunner other arguments
-#   output_directory=... - Where to save the output. Default is cwd/node_name_[i]/}
-#   manager_adress=... - Where to find the manager node. Default is localhost:9050
-#   host=... - Hostname of the task node. Default is to ask manager where to run
-#   port=... - Port of the task node. Default is to ask manager where to run
 
 # NOTE: manager_adress and host/port are mutually exclusive.
 
 nodes = []
-for _ in range(10):
-    job = new_job(check_cache=False) 
-    node = NodeRunner(
-        identifier="hdbet",
+for _ in range(1):
+    node = RHJob(
+        node_name="hdbet",
         inputs = data,
-        manager_adress="titan6:9050",
-        job = job,
+        node_address="titan6.petnet.rh.dk:8010",
+        check_cache=False,
+        resources_included=True,
+        included_cuda_device=0,
     )
 
     #Queue the node for execution

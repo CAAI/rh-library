@@ -17,9 +17,6 @@ services:
   #Queue Node
   manager:
     image: rhnode/manager:latest
-    build: 
-      context: ../
-      dockerfile: nodes/manager/Dockerfile
 
     expose:
     - "8000"
@@ -37,7 +34,9 @@ services:
   #HD BET Node
   hdbet:
     image: rhnode/hdbet:latest
-    build:
+    build: .
+    ports:
+      - "8010:8000"
     deploy:
       resources:
         reservations:

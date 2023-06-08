@@ -15,7 +15,7 @@ class HDBetNode(RHNode):
     output_spec = HDBetOutput
     name = "hdbet"
     required_gb_gpu_memory = 8
-    required_num_processes = 2
+    required_num_threads = 2
     required_gb_memory = 8    
 
     def process(inputs, job):

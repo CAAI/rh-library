@@ -21,6 +21,9 @@ jobs:
           elif [[ "$VAL" == hdbet-* ]]; then
             echo "::set-output name=dir::nodes/hdbet"
             echo "::set-output name=image_name::hdbet"
+          elif [[ "$VAL" == hdctbet-* ]]; then
+            echo "::set-output name=dir::nodes/hdctbet"
+            echo "::set-output name=image_name::hdctbet"
           elif [[ "$VAL" == zerodose_dicom-* ]]; then
             echo "::set-output name=dir::dicom_nodes/zerodose"
             echo "::set-output name=image_name::zerodose_dicom"

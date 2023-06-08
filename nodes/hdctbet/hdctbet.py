@@ -14,7 +14,7 @@ class HDCTBetNode(RHNode):
     input_spec = HDCTBetInput
     output_spec = HDCTBetOutput
     name = "hdctbet"
-    required_gb_gpu_memory = 7
+    required_gb_gpu_memory = 8
     required_num_threads = 2
     required_gb_memory = 8    
 

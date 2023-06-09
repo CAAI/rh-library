@@ -9,7 +9,7 @@ RUN pip install ./HD-BET
 RUN python -c "from HD_BET import utils; [utils.maybe_download_parameters(i) for i in range(5)]"
 
 #RH-Node
-RUN pip install git+https://github.com/CAAI/rh-node.git@1.1.0
+RUN pip install git+https://github.com/CAAI/rh-node.git@1.1.1
 
 COPY hdbet.py /app/hdbet.py
 WORKDIR /app

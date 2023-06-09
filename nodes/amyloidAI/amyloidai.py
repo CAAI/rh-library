@@ -27,7 +27,7 @@ class AmyloidAINode(RHNode):
     name = "amyloidai"
     required_gb_gpu_memory = 0
     required_num_threads = 1
-    required_gb_memory = 8
+    required_gb_memory = 1
 
     def process(inputs, job):
 
@@ -81,7 +81,7 @@ class AmyloidAINode(RHNode):
             # Apply BET mask to PET in MNI space
             img = nib.load(PET_affine)
             BET = nib.load(BET_file)
-            arr = img.get_fdata() * BET.multiplier
+            arr = img.get_fdata() * BET.get_fdata()
             img = nib.Nifti1Image(arr, img.affine, img.header)
             PET_file = job.directory / "PET_affine_BET.nii.gz"
             img.to_filename(PET_file)

@@ -16,7 +16,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:1.1.0
+    image: rhnode/manager:v1.1.1
 
     expose:
     - "8000"

@@ -51,7 +51,7 @@ services:
 
   #HD CTBET Node
   hdctbet:
-    image: rhnode/hdctbet:latest
+    image: rhnode/hdctbet:v1.1.0
 
     deploy:
       resources:

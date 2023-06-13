@@ -25,7 +25,7 @@ jobs:
             echo "::set-output name=dir::nodes/hdctbet"
             echo "::set-output name=image_name::hdctbet"
           elif [[ "$VAL" == amyloidai-* ]]; then
-            echo "::set-output name=dir::nodes/amyloidai"
+            echo "::set-output name=dir::nodes/amyloidAI"
             echo "::set-output name=image_name::amyloidai"
           elif [[ "$VAL" == zerodose_dicom-* ]]; then
             echo "::set-output name=dir::dicom_nodes/zerodose"

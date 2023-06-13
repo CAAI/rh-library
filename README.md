@@ -6,7 +6,8 @@ Tools developed by members of CAAI, packaged in rh-node.
 | **node** |**dicom**| **description** | **dependencies** | **project** |
 |---|---|---|---|---|
 | [zerodose](nodes/zerodose) |[link](dicom_nodes/zerodose) |FDG anomaly detection| hdbet | https://github.com/CAAI/zerodose |
-| [hdctbet](nodes/hdctbet) | |CT brain extraction |  | https://github.com/CAAI/HD-CTBET |
+| [hdctbet](nodes/hdctbet) | | CT brain extraction|  | https://github.com/CAAI/HD-CTBET |
+| [amyloidai](nodes/amyloidAI) | | Amyloid status estimation | hdbet, hdctbet | https://github.com/CAAI/amyloidAI |
 
 ## General purpose nodes
 Other tools, packaged in rh-node. 

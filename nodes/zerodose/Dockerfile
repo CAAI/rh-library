@@ -6,7 +6,7 @@ RUN apt-get install git -y
 RUN pip install --upgrade pip
 
 # RH-Node
-RUN pip install git+https://github.com/CAAI/rh-node.git@1.1.0
+RUN pip install git+https://github.com/CAAI/rh-node.git@v1.1.1
 
 # General requirements
 RUN pip install git+https://github.com/CAAI/zerodose.git@c9627e6cad25e08fabeaee0baeb16c5fa246f3ba

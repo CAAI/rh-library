@@ -123,7 +123,9 @@ class AIMSNode(RHNode):
             ref_file = job.directory / os.path.basename(files[ref_index]).replace('.nii.gz', '_ref.nii.gz')
             shutil.copyfile(files[ref_index], ref_file)
             for ind, f in enumerate(files_r2s):
-                name = os.path.basename(files[ind]),
+                name = os.path.basename(files[ind])
+                print("FLIRT CMD")
+                print(f"flirt -in {f} -ref {ref_file} -init {omat_files[ind]} -out {name} -applyxfm -interp spline")
                 flirt_inputs = {"in_file": f, 
                                 "ref_file": ref_file,
                                 "init_file": omat_files[ind],
@@ -139,10 +141,10 @@ class AIMSNode(RHNode):
                 BET = nib.load(BETmasks[ref_index])
                 arr = img.get_fdata() * BET.get_fdata()
                 img = nib.Nifti1Image(arr, img.affine, img.header)
-                files[ind] = job.directory / names[ind]
+                files[ind] = job.directory / (names[ind]+'_preprocessed.nii.gz')
                 img.to_filename(files[ind])
 
-            # Done with preprocess
+            # Done with preprocess. Output the files
             for f, n in zip(files, names):
                 out_args[n.lower()+'_bet'] = f
         

@@ -4,8 +4,9 @@ data = {
     "flair": "/homes/claes/projects/testarea/MS_SyntheticLesions/Data/training_data/MSSEG_13322/FLAIR_synth_native.nii.gz",
     "t2": "/homes/claes/projects/testarea/MS_SyntheticLesions/Data/training_data/MSSEG_13322/T2_synth_native.nii.gz",
     "t1": "/homes/claes/projects/testarea/MS_SyntheticLesions/Data/training_data/MSSEG_13322/T1_synth_native.nii.gz",
-    "do_preprocess": True,
-    "out_filename": 'AIMS_wpreprocess.nii.gz'
+    "do_preprocess": False,
+    #"out_filename": 'AIMS_wpreprocess.nii.gz'
+    "out_filename": 'AIMS.nii.gz'
 }
 
 node = RHJob(
@@ -14,7 +15,8 @@ node = RHJob(
     #node_address="titan6.petnet.rh.dk:8010",
     #node_address = "localhost:8010",
     manager_address='titan6:9050',
-    output_directory=".",
+    check_cache=False,
+    #output_directory=".",
 )
 
 #Queue the node for execution

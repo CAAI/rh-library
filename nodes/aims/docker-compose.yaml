@@ -1,5 +1,6 @@
 version: "1"
 services:
+
   reverse-proxy:
     # The official v2 Traefik docker image
     image: traefik:v2.9
@@ -16,7 +17,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:1.1.0
+    image: rhnode/manager:v1.1.1
 
     expose:
     - "8000"
@@ -31,14 +32,10 @@ services:
       RH_GPU_MEM: "8"
       RH_NUM_THREADS: 6
 
-  ## Test node
+  #HD BET Node
   hdbet:
-    image: rhnode/hdbet:latest
+    image: rhnode/hdbet:v1.0.0_rhnode1.1.1
 
-    expose:
-      - "8000"
-    labels:
-      - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
     deploy:
       resources:
         reservations:
@@ -46,16 +43,35 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    expose:
+      - "8000"
 
-  ## Test node
+    labels:
+      - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
+
+  #FLIRT node
+  flirt:
+    image: rhnode/flirt:latest
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.flirt.rule=PathPrefix(`/flirt`)"
+
+  #reorient2std node
+  reorient2std:
+    image: rhnode/reorient2std:latest
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.reorient2std.rule=PathPrefix(`/reorient2std`)"
+  
   aims:
     build: .
     expose:
       - "8000"
     ports:
       - "8010:8000"
-    labels:
-      - "traefik.http.routers.aims.rule=PathPrefix(`/aims`)" 
+
     deploy:
       resources:
         reservations:
@@ -63,3 +79,7 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+
+    labels:
+      - "traefik.http.routers.aims.rule=PathPrefix(`/aims`)" 
+

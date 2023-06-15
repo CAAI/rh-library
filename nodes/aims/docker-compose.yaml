@@ -51,7 +51,7 @@ services:
 
   #FLIRT node
   flirt:
-    image: rhnode/flirt:v0.1.0_rhnode1.1.1
+    image: rhnode/flirt:v0.1.0_rhnode1.2.0a.1
     expose:
       - "8000"
     labels:

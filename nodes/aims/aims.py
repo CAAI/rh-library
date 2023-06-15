@@ -1,44 +1,26 @@
 from rhnode import RHNode, RHJob
 from pydantic import BaseModel, FilePath
 from typing import Optional
+import subprocess
+import nibabel as nib
+import numpy as np
 import os
-import shutil
-from nnunet.paths import default_plans_identifier, network_training_output_dir, default_trainer, default_cascade_trainer
-from nnunet.utilities.task_name_id_conversion import convert_id_to_task_name
-from nnunet.inference.predict import predict_from_folder
 
 
 class AIMSInputs(BaseModel):
     flair: FilePath
     t2: FilePath
-    t1: FilePath
-    do_skullstrip: Optional[bool] = True
-    do_spatially_align: Optional[bool] = True
+    t1: Optional[FilePath] = None
+    out_filename: str
+    do_preprocess: Optional[bool] = False
 
 
 class AIMSOutputs(BaseModel):
     mask: FilePath
+    flair_bet: Optional[FilePath] = None
+    t2_bet: Optional[FilePath] = None
+    t1_bet: Optional[FilePath] = None
 
-
-def predict_nnUNet(input_folder, prediction_folder):
-        task_name = 'TaskXX_XXXX'
-        plans_identifier = default_plans_identifier
-        folds = None
-        model = "3d_fullres"
-        tta = True
-        trainer = default_trainer
-        model_folder_name = os.path.join(
-            network_training_output_dir, 
-            model, 
-            task_name, 
-            trainer + "__" + plans_identifier)
-        if not os.path.isdir(model_folder_name):
-            raise Exception('Wrong model output folder %s' % model_folder_name)
-
-        predict_from_folder(
-            model_folder_name, input_folder, prediction_folder, folds, save_npz=False, num_threads_preprocessing=6,
-            num_threads_nifti_save=2, part_id=0, num_parts=1, tta=tta)
-        
 
 class AIMSNode(RHNode):
     input_spec = AIMSInputs
@@ -46,40 +28,103 @@ class AIMSNode(RHNode):
     name = "aims"
 
     required_gb_gpu_memory = 8
-    required_num_threads = 1
+    required_num_threads = 4
     required_gb_memory = 8
+    
 
     def process(inputs, job):
 
-        files = [inputs.flair, inputs.t2, inputs.t1]
-        BETmasks = [None, None, None]
+        out_args = {}
 
-        # Perform skullstrip
-        if inputs.do_skullstrip:
-            hdbet_nodes = []
+        if inputs.t1 is not None:
+            files = [inputs.flair, inputs.t2, inputs.t1]
+            BETmasks = [None, None, None]
+            names = ['FLAIR','T2','T1']
+        else:
+            files = [inputs.flair, inputs.t2]
+            BETmasks = [None, None]
+            names = ['FLAIR','T2']
+
+        if inputs.do_preprocess:
+
+            # Reorient to standard
+            reorient_nodes = []
             for f in files:
-                hdbet_inputs = {"mr": f}
-                hdbet_nodes.append(
-                    RHJob.from_parent_job("hdbet", hdbet_inputs, job)
+                reorient_nodes.append(
+                    RHJob.from_parent_job("reorient2std", {'in_file': f}, job, use_same_resources=True)
                 )
             # Start nodes in parallel
-            for node in hdbet_nodes:
+            for node in reorient_nodes:
                 node.start()
+            for ind, node in enumerate(reorient_nodes):
+                reorient_output = node.wait_for_finish()
+                files[ind] = reorient_output['out']
+
+            # save the current files, we will use the transformations from
+            # the registrations AFTER BET to register them to a reference space
+            # and then apply the BET mask!
+            files_r2s = [f for f in files]
+
+            # check the spacing for all files to determine which one will be our
+            # reference. Default is T1
+            ref_index = 0
+            min_spacing = 1e9
+            for f, file_ in enumerate(files):
+                try:
+                    file_ = nib.load(file_)
+                    spacing = float(np.product(file_.header.get_zooms()))
+                    if spacing < min_spacing:
+                        min_spacing = spacing
+                        ref_index = f
+                except Exception as e:
+                    continue
+
+            # Perform skull strip
+            hdbet_nodes = []
+            for f in files:
+                hdbet_nodes.append(
+                    RHJob.from_parent_job("hdbet", {"mr": f}, job, use_same_resources=True)
+                )
+            # Start nodes in parallel
+            #for ind,node in hdbet_nodes:
+            #    node.start()
             for ind, node in enumerate(hdbet_nodes):
+                node.start() # OBS THIS MEANS THAT IT DOES NOT START IN PARRALEL!!
                 hdbet_output = node.wait_for_finish()
                 files[ind] = hdbet_output['masked_mr']
                 BETmasks[ind] = hdbet_output['mask']
 
-        # Perform registration
-        if inputs.do_spatially_align:
-            # Assumes FLAIR is the target. Can also be checked first!
+            # Perform registration
             flirt_nodes = []
             omat_files = []
-            for f in files[1:]:
+            for f in files:
                 flirt_inputs = {"in_file": f, 
-                                "ref_file": files[0],
-                                #"omat_file": os.path.basename(f).replace('.nii.gz', '.mat'),
-                                "out_file": os.path.basename(f).replace('.nii.gz', '_rsl_to_FLAIR.nii.gz')}
+                                "ref_file": files[ref_index],
+                                "omat_file": os.path.basename(f).replace('.nii.gz', '_reg.mat'),
+                                "out_file": os.path.basename(f).replace('.nii.gz', '_reg.nii.gz'),
+                                "xargs": "-dof 6 -interp spline"}
+                flirt_nodes.append(
+                    RHJob.from_parent_job("flirt", flirt_inputs, job, use_same_resources=True)
+                )
+            for node in flirt_nodes:
+                node.start()
+            for ind, node in enumerate(flirt_nodes):
+                flirt_output = node.wait_for_finish()
+                files[ind] = node['out']
+                omat_files[ind] = node['omat']
+
+            # Transform original files (after r2s) to reference space with .mat files
+            # from previous step, then apply reference BET mask.
+            flirt_nodes = []
+            omat_files = []
+            for ind, f in enumerate(files_r2s):
+                name = os.path.basename(files[ind]),
+                flirt_inputs = {"in_file": f, 
+                                "ref_file": files[ref_index],
+                                "init_file": omat_files[ind],
+                                "out_file": name,
+                                "applyxfm": True,
+                                "xargs": "-interp spline"}
                 flirt_nodes.append(
                     RHJob.from_parent_job("flirt", flirt_inputs, job)
                 )
@@ -87,27 +132,27 @@ class AIMSNode(RHNode):
                 node.start()
             for ind, node in enumerate(flirt_nodes):
                 flirt_output = node.wait_for_finish()
-                files[ind+1] = flirt_output['out']
 
-            # OBS! Could have resampled the raw file and re-applied the BET mask.
+                # Apply BET mask
+                img = nib.load(flirt_output['out'])
+                BET = nib.load(BETmasks[ref_index])
+                arr = img.get_fdata() * BET.get_fdata()
+                img = nib.Nifti1Image(arr, img.affine, img.header)
+                files[ind] = job.directory / names[ind]
+                img.to_filename(files[ind])
 
-        # Prepare and call nnUNet
-        input_folder = job.directory / 'prediction_input'
-        input_folder.mkdir()
-        for ind, f in enumerate(files):
-            shutil.copyfile(f, input_folder / f'AIMS_0000_{ind:04d}.nii.gz')
-        print(os.listdir(input_folder))
-        output_folder = job.directory / 'prediction_output'
-        # predict_nnUNet(input_folder, output_folder)
-        output_folder.mkdir() # <-- NOT NEEDED | Created by nnUNet
-        out_segmentation = output_folder / 'AIMS_0000.nii.gz'
-        # Temp testing below - remove the line when everything above works.
-        shutil.copyfile(input_folder / f'AIMS_0000_{ind:04d}.nii.gz', out_segmentation) ## <-- TEST
-
-
-        return AIMSOutputs(
-            mask=out_segmentation
-        )
+            # Done with preprocess
+            for f, n in zip(files, names):
+                out_args[n.lower()+'_bet'] = f
+        
+        out_args['mask'] = job.directory / inputs.out_filename
+        # Call AIMS 
+        cmd = ['AIMS', '-flair', files[0], '-t2', files[1], '-o', str(out_args['mask'])]
+        if inputs.t1 is not None:
+            cmd += ['-t1', files[2]]
+        output = subprocess.check_output(cmd, text=True)
+        
+        return AIMSOutputs(**out_args)
 
 
 app = AIMSNode()

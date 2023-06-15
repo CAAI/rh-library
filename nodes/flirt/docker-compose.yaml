@@ -17,7 +17,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:1.1.0
+    image: rhnode/manager:v1.2.0-a.1
 
     expose:
     - "8000"
@@ -33,7 +33,6 @@ services:
       RH_NUM_THREADS: 6
 
   flirt:
-    image: rhnode/flirt:latest
     build: .
     deploy:
       resources:

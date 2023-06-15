@@ -84,7 +84,8 @@ RUN printf '{ \
 # End saving to specification to JSON.
 
 # RH-Node
-RUN pip install git+https://github.com/CAAI/rh-node.git@1.1.0
+#RUN pip install git+https://github.com/CAAI/rh-node.git@v1.1.1
+RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0-a.1
 
 #Unique to project requirements
 COPY flirt.py /app/flirt.py

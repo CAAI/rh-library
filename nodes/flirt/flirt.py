@@ -8,8 +8,8 @@ import subprocess
 class FLIRTInputs(BaseModel):
     in_file: FilePath
     ref_file: FilePath
-    out_file: str = None
-    omat_file: str = None
+    out_file: Optional[str] = None
+    omat_file: Optional[str] = None
     applyxfm: Optional[bool] = False
     init_file: Optional[FilePath] = None
     xargs: Optional[str] = ''
@@ -26,8 +26,8 @@ class FLIRTNode(RHNode):
     output_spec = FLIRTOutputs
     name = "flirt"
     required_gb_gpu_memory = 0
-    required_num_threads = 1
-    required_gb_memory = 8
+    required_num_threads = 4
+    required_gb_memory = 4
 
     def process(inputs, job):
 

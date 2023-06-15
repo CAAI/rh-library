@@ -17,7 +17,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:1.1.0
+    image: rhnode/manager:v1.1.1
 
     expose:
     - "8000"
@@ -26,11 +26,10 @@ services:
       - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
 
     environment:
-      RH_OTHER_ADDRESSES: "mydomain:9050"
       RH_NAME: "myhost"
-      RH_MEMORY: 32
+      RH_MEMORY: 12
       RH_GPU_MEM: "8"
-      RH_PROCESSES: 16
+      RH_NUM_THREADS: 6
 
   reorient2std:
     image: rhnode/reorient2std:latest

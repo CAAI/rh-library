@@ -11,7 +11,7 @@ class Reorient2stdInputs(BaseModel):
 
 
 class Reorient2stdOutputs(BaseModel):
-    out: FilePath = None
+    out: FilePath
     out_message: str
 
 
@@ -25,7 +25,7 @@ class Reorient2stdNode(RHNode):
 
     def process(inputs, job):
 
-        outpath = job.directory / inputs.out_file
+        outpath = job.directory / inputs.out_file if inputs.out_file is not None else job.directory / str(inputs.in_file).replace('.nii.gz', '_r2s.nii.gz')
         
         cmd = ["fslreorient2std",
                str(inputs.in_file),

@@ -34,7 +34,7 @@ services:
 
   #HD BET Node
   hdbet:
-    image: rhnode/hdbet:v1.1.0
+    image: rhnode/hdbet:v1.1.0_rhnode1.1.1
 
     deploy:
       resources:
@@ -51,7 +51,7 @@ services:
 
   #HD CTBET Node
   hdctbet:
-    image: rhnode/hdctbet:v1.1.0
+    image: rhnode/hdctbet:v1.1.0_rhnode1.1.1
 
     deploy:
       resources:

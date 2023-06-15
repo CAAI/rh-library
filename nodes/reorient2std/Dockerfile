@@ -11,9 +11,8 @@ ENV FSLDIR="/opt/fsl-6.0.4" \
     FSLMACHINELIST="" \
     FSLREMOTECALL="" \
     FSLGECUDAQ="cuda.q"
-
-RUN apt-get update -qq
-RUN apt-get install -y -q --no-install-recommends \
+RUN apt-get update -qq \
+    && apt-get install -y -q --no-install-recommends \
            bc \
            ca-certificates \
            curl \
@@ -37,14 +36,14 @@ RUN apt-get install -y -q --no-install-recommends \
            python3 \
            sudo \
            wget \
-           git
-RUN rm -rf /var/lib/apt/lists/*
-RUN echo "Downloading FSL ..."
-RUN mkdir -p /opt/fsl-6.0.4
-RUN curl -fL https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-6.0.4-centos6_64.tar.gz \
-    | tar -xz -C /opt/fsl-6.0.4 --strip-components 1 
-RUN echo "Installing FSL conda environment ..."
-RUN bash /opt/fsl-6.0.4/etc/fslconf/fslpython_install.sh -f /opt/fsl-6.0.4
+           git \
+    && rm -rf /var/lib/apt/lists/* \
+    && echo "Downloading FSL ..." \
+    && mkdir -p /opt/fsl-6.0.4 \
+    && curl -fL https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-6.0.4-centos6_64.tar.gz \
+    | tar -xz -C /opt/fsl-6.0.4 --strip-components 1 \
+    && echo "Installing FSL conda environment ..." \
+    && bash /opt/fsl-6.0.4/etc/fslconf/fslpython_install.sh -f /opt/fsl-6.0.4
 
 # Save specification to JSON.
 RUN printf '{ \

@@ -33,6 +33,7 @@ services:
       RH_NUM_THREADS: 6
 
   flirt:
+    image: rhnode/flirt:v0.1.0_rhnode1.2.0a.1
     build: .
     deploy:
       resources:

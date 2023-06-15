@@ -17,7 +17,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:v1.1.1
+    image: rhnode/manager:v1.2.0-a.1
 
     expose:
     - "8000"
@@ -51,7 +51,8 @@ services:
 
   #FLIRT node
   flirt:
-    image: rhnode/flirt:latest
+    #image: rhnode/flirt:latest
+    image: flirt-flirt:latest
     expose:
       - "8000"
     labels:

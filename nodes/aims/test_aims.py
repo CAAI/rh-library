@@ -14,8 +14,6 @@ node = RHJob(
     #node_address="titan6.petnet.rh.dk:8010",
     #node_address = "localhost:8010",
     manager_address='titan6:9050',
-    check_cache=False,
-    included_cuda_device=0,
     output_directory=".",
 )
 

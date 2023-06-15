@@ -5,6 +5,7 @@ import subprocess
 import nibabel as nib
 import numpy as np
 import os
+import shutil
 
 
 class AIMSInputs(BaseModel):
@@ -85,11 +86,9 @@ class AIMSNode(RHNode):
                 hdbet_nodes.append(
                     RHJob.from_parent_job("hdbet", {"mr": f}, job, use_same_resources=True)
                 )
-            # Start nodes in parallel
-            #for ind,node in hdbet_nodes:
-            #    node.start()
             for ind, node in enumerate(hdbet_nodes):
-                node.start() # OBS THIS MEANS THAT IT DOES NOT START IN PARRALEL!!
+                # Dont start nodes in parallel since on GPU
+                node.start()
                 hdbet_output = node.wait_for_finish()
                 files[ind] = hdbet_output['masked_mr']
                 BETmasks[ind] = hdbet_output['mask']
@@ -97,9 +96,14 @@ class AIMSNode(RHNode):
             # Perform registration
             flirt_nodes = []
             omat_files = []
+            # BUG https://github.com/CAAI/rh-node/issues/26
+            # FIX THE FACT THAT REF_FILE AND f CAN BE THE SAME,
+            # WHICH IS NOT ALLOWED IN RHNode
+            ref_file = job.directory / os.path.basename(files[ref_index]).replace('.nii.gz', '_ref.nii.gz')
+            shutil.copyfile(files[ref_index], ref_file)
             for f in files:
                 flirt_inputs = {"in_file": f, 
-                                "ref_file": files[ref_index],
+                                "ref_file": ref_file,
                                 "omat_file": os.path.basename(f).replace('.nii.gz', '_reg.mat'),
                                 "out_file": os.path.basename(f).replace('.nii.gz', '_reg.nii.gz'),
                                 "xargs": "-dof 6 -interp spline"}
@@ -110,27 +114,24 @@ class AIMSNode(RHNode):
                 node.start()
             for ind, node in enumerate(flirt_nodes):
                 flirt_output = node.wait_for_finish()
-                files[ind] = node['out']
-                omat_files[ind] = node['omat']
+                files[ind] = flirt_output['out']
+                omat_files.append(flirt_output['omat'])
 
             # Transform original files (after r2s) to reference space with .mat files
             # from previous step, then apply reference BET mask.
-            flirt_nodes = []
-            omat_files = []
+            # BUG: https://github.com/CAAI/rh-node/issues/26 Same as above
+            ref_file = job.directory / os.path.basename(files[ref_index]).replace('.nii.gz', '_ref.nii.gz')
+            shutil.copyfile(files[ref_index], ref_file)
             for ind, f in enumerate(files_r2s):
                 name = os.path.basename(files[ind]),
                 flirt_inputs = {"in_file": f, 
-                                "ref_file": files[ref_index],
+                                "ref_file": ref_file,
                                 "init_file": omat_files[ind],
                                 "out_file": name,
                                 "applyxfm": True,
                                 "xargs": "-interp spline"}
-                flirt_nodes.append(
-                    RHJob.from_parent_job("flirt", flirt_inputs, job)
-                )
-            for node in flirt_nodes:
+                node = RHJob.from_parent_job("flirt", flirt_inputs, job, use_same_resources=True)
                 node.start()
-            for ind, node in enumerate(flirt_nodes):
                 flirt_output = node.wait_for_finish()
 
                 # Apply BET mask

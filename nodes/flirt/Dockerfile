@@ -84,7 +84,6 @@ RUN printf '{ \
 # End saving to specification to JSON.
 
 # RH-Node
-#RUN pip install git+https://github.com/CAAI/rh-node.git@v1.1.1
 RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0-a.1
 
 #Unique to project requirements

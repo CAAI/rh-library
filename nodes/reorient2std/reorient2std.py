@@ -7,7 +7,7 @@ import subprocess
 
 class Reorient2stdInputs(BaseModel):
     in_file: FilePath
-    out_file: str = None
+    out_file: Optional[str] = None
 
 
 class Reorient2stdOutputs(BaseModel):
@@ -25,7 +25,7 @@ class Reorient2stdNode(RHNode):
 
     def process(inputs, job):
 
-        outpath = job.directory / inputs.out_file if inputs.out_file is not None else job.directory / str(inputs.in_file).replace('.nii.gz', '_r2s.nii.gz')
+        outpath = job.directory / inputs.out_file if inputs.out_file is not None else job.directory / os.path.basename(inputs.in_file).replace('.nii.gz', '_r2s.nii.gz')
         
         cmd = ["fslreorient2std",
                str(inputs.in_file),

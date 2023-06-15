@@ -32,7 +32,6 @@ services:
       RH_NUM_THREADS: 6
 
   reorient2std:
-    image: rhnode/reorient2std:latest
     build: .
     deploy:
       resources:

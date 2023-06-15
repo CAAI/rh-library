@@ -34,7 +34,7 @@ services:
 
   #HD BET Node
   hdbet:
-    image: rhnode/hdbet:v1.0.0_rhnode1.1.1
+    image: rhnode/hdbet:v1.1.0_rhnode1.1.1
 
     deploy:
       resources:
@@ -51,8 +51,7 @@ services:
 
   #FLIRT node
   flirt:
-    #image: rhnode/flirt:latest
-    image: flirt-flirt:latest
+    image: rhnode/flirt:v0.1.0_rhnode1.1.1
     expose:
       - "8000"
     labels:
@@ -60,7 +59,7 @@ services:
 
   #reorient2std node
   reorient2std:
-    image: rhnode/reorient2std:latest
+    image: rhnode/reorient2std:v0.1.0_rhnode1.1.1
     expose:
       - "8000"
     labels:

@@ -2,9 +2,12 @@ from rhnode import RHNode
 from pydantic import BaseModel, FilePath
 import subprocess
 import os
+from typing import Optional
+
 
 class HDCTBetInput(BaseModel):
     ct:FilePath
+    out_file: Optional[str] = None
 
 class HDCTBetOutput(BaseModel):
     masked_ct:FilePath
@@ -20,8 +23,8 @@ class HDCTBetNode(RHNode):
 
     def process(inputs, job):
 
-        out_ct = job.directory / "ct_masked.nii.gz"
-        out_mask= job.directory / "ct_masked_mask.nii.gz"
+        out_ct = job.directory / inputs.out_file if inputs.out_file is not None else job.directory / os.path.basename(inputs.ct).replace('.nii.gz', '_BET.nii.gz')
+        out_mask= job.directory / (out_ct.name.replace('.nii.gz', '_mask.nii.gz'))
 
         cmd = ["hd-ctbet", "-i", str(inputs.ct), "-o", str(out_ct)]
 

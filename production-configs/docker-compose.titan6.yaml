@@ -6,9 +6,9 @@ services:
     command: --api.insecure=true --providers.docker
     ports:
       # The HTTP port
-      - "9050:80"
+      - "9040:80"
       # The Web UI (enabled by --api.insecure=true)
-      - "9051:8080"
+      - "9041:8080"
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock

@@ -4,7 +4,7 @@
 - `sudo mkdir -p /etc/docker/compose/rh-node`
 - Copy `docker-compose.TEMPLATE.yaml` to that folder and rename it to `/etc/docker/compose/rh-node/docker-compose.yaml`
 - Edit the yaml file so only the services that should be available on the system remains
-- If the node is part of a cluster of nodes, add the other nodes in the field `RH_OTHER_ADDRESSES`
+- If the node is part of a cluster of nodes, add the other nodes in the field `RH_OTHER_ADDRESSES` under `manager` service
 - Edit the fields `RH_NAME` `RH_MEMORY` `RH_GPU_MEM` and `RH_NUM_THREADS` under `manager` service so it fits your system.
   
   Hints:

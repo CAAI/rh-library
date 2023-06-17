@@ -1,4 +1,5 @@
 from rhnode import RHJob
+import shutil
 
 data = {
     "in_file": "/homes/claes/projects/amyloidClassifier/Data/nii/amyloid_0010/ANAT_smoothed_0-100_crop_BET.nii.gz",
@@ -9,9 +10,7 @@ data = {
 node = RHJob(
     node_name="flirt",
     inputs = data,
-    manager_address='titan6:9050',
-    #check_cache=False,
-    #save_to_cache=False,
+    manager_address='localhost:9050',
 )
 node.start()
 output = node.wait_for_finish()
@@ -29,10 +28,11 @@ data_resample = {
 node = RHJob(
     node_name="flirt",
     inputs = data_resample,
-    manager_address='titan6:9050',
-    #check_cache=False,
-    #save_to_cache=False,
+    manager_address='localhost:9050',
 )
 node.start()
 output = node.wait_for_finish()
 print(output)
+
+shutil.rmtree('flirt', ignore_errors=True)
+shutil.rmtree('flirt_1', ignore_errors=True)

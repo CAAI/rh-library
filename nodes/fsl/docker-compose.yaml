@@ -1,0 +1,5 @@
+services:
+
+  fsl:
+    image: rhnode/fsl:v6.0.4
+    build: .

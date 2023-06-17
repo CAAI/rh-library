@@ -16,7 +16,7 @@
   - 9030 & 9031: Research node
   - 9040 & 9041: Production node
   - 9050 & 9051: Used to develop nodes that are not expected to be live at all times (and therefore should not have a systemd file!)
-  - 
+   
 ## Install with systemd
 - Copy the systemd file to the systemd folder: `sudo cp docker-compose@.service /etc/systemd/system/`
 - Start your systemd `systemctl start docker-compose@rh-node`

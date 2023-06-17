@@ -5,7 +5,7 @@
 1. Update the apt package index and install packages to allow apt to use a repository over HTTPS:
    ```
    sudo apt-get update
-   sudo apt-get install ca-certificates curl gnupg
+   sudo apt-get install -y ca-certificates curl gnupg
    ```
 2. Add Docker’s official GPG key:
    ```
@@ -45,12 +45,20 @@
    sudo apt-get update
    sudo apt-get install -y nvidia-docker2
    ```
-4. Restart the Docker daemon to complete the installation:
+3. Restart the Docker daemon to complete the installation:
 
    ```
    sudo systemctl restart docker
    ```
-6. Test install
+4. You might need to add your user to the docker group to gain correct permissions. To do so, run:
+   
+   ```
+   sudo groupadd docker
+   sudo usermod -aG docker ${USER}
+   ```
+   
+   Login and log-out, e.g. using `su -s ${USER}`
+5. Test install
    
    ```
    docker run -it --gpus all nvidia/cuda:11.4.0-base-ubuntu20.04 nvidia-smi

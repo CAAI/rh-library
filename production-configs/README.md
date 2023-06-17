@@ -65,11 +65,14 @@
    ```
 6. Ensure that installing docker wont lock out ssh access. See [here](https://github.com/CAAI/rh-node/blob/main/docs/docker_and_ssh.md).
    
-
-
+   
 ## Prepare yaml config
 - `sudo mkdir -p /etc/docker/compose/rh-node`
-- Copy `docker-compose.TEMPLATE.yaml` to that folder and rename it to `/etc/docker/compose/rh-node/docker-compose.yaml`
+- Copy `docker-compose.TEMPLATE.yaml` to that folder and rename it to `/etc/docker/compose/rh-node/docker-compose.yaml`. You can use e.g.
+  
+  `
+  sudo wget https://raw.githubusercontent.com/CAAI/rh-library/main/production-configs/docker-compose.TEMPLATE.yaml -O /etc/docker/compose/rh-node/docker-compose.yaml
+  `
 - Edit the yaml file so only the services that should be available on the system remains
 - If the node is part of a cluster of nodes, add the other nodes in the field `RH_OTHER_ADDRESSES` under `manager` service
 - Edit the fields `RH_NAME` `RH_MEMORY` `RH_GPU_MEM` and `RH_NUM_THREADS` under `manager` service so it fits your system.

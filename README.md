@@ -18,14 +18,14 @@ Other tools, packaged in rh-node.
 | [reorient2std](nodes/reorient2std) | (FSL) Reorient to standard orientation |  | https://fsl.fmrib.ox.ac.uk/fsl |
 | [flirt](nodes/flirt) | (FSL) Registration and resampling |  | https://fsl.fmrib.ox.ac.uk/fsl |
 
-# Overview of active nodes at Rigshospitalet/CAAI
+## Overview of active nodes at Rigshospitalet/CAAI
 
-## Research (port 9030)
+### Research (port 9030)
 | Node name  |Status |
 | ------------- | ------------- |
 | titan5 | Up |
 
-## Production (port 9040)
+### Production (port 9040)
 | Node name | Status |
 | ------------- | ------------- |
 | caai1  |  *down* |

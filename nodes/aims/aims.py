@@ -153,7 +153,10 @@ class AIMSNode(RHNode):
         cmd = ['AIMS', '-flair', files[0], '-t2', files[1], '-o', str(out_args['mask'])]
         if inputs.t1 is not None:
             cmd += ['-t1', files[2]]
-        output = subprocess.check_output(cmd, text=True)
+
+        all_env_vars = os.environ.copy()
+        all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})
+        _ = subprocess.check_output(cmd, text=True, env=all_env_vars)
         
         return AIMSOutputs(**out_args)
 

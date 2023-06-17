@@ -18,7 +18,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:v1.1.1
+    image: rhnode/manager:v1.2.0
     expose:
     - "8000"
     labels:
@@ -34,7 +34,7 @@ services:
 
   #HD BET Node
   hdbet:
-    image: rhnode/hdbet:v1.1.0_rhnode1.1.1
+    image: rhnode/hdbet:v1.1.0_rhnode1.2.0
     depends_on:
       - manager
     deploy:
@@ -54,7 +54,7 @@ services:
 
   #HD CTBET Node
   hdctbet:
-    image: rhnode/hdctbet:v1.1.0_rhnode1.1.1
+    image: rhnode/hdctbet:v1.1.0_rhnode1.2.0
     depends_on:
       - manager
     deploy:
@@ -74,7 +74,7 @@ services:
 
   #FLIRT node
   flirt:
-    image: rhnode/flirt:v0.1.0_rhnode1.2.0a.1
+    image: rhnode/flirt:v0.2.0_rhnode1.2.0
     depends_on:
       - manager
     expose:
@@ -87,7 +87,7 @@ services:
 
   #reorient2std node
   reorient2std:
-    image: rhnode/reorient2std:v0.1.0_rhnode1.1.1
+    image: rhnode/reorient2std:v0.2.0_rhnode1.2.0
     depends_on:
       - manager
     expose:
@@ -120,7 +120,7 @@ services:
 
   #AmyloidAI Node
   amyloidai:
-    image: rhnode/amyloidai:v1.1.0_rhnode1.2.0a1
+    image: rhnode/amyloidai:v1.1.0_rhnode1.2.0
     depends_on:
       - hdbet
       - hdctbet
@@ -141,7 +141,7 @@ services:
 
   #AIMS Node
   aims:
-    image: rhnode/aims:v0.1.0_rhnode1.2.0a.1
+    image: rhnode/aims:v0.1.0_rhnode1.2.0
     depends_on:
       - hdbet
       - reorient2std

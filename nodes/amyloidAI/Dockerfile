@@ -25,7 +25,7 @@ RUN pip install git+https://github.com/CAAI/amyloidAI.git@1.0.1
 RUN python -c "import amyloidAI"
 
 #RH-Node
-RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0-a.1
+RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0
 
 # Env variables
 ENV PATH="$PATH:/workspace/niftyreg_install/bin"

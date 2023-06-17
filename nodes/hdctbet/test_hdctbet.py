@@ -8,6 +8,7 @@ data = {
 node = RHJob(
     node_name="hdctbet",
     inputs = data,
+    node_address = "localhost:9050",
 )
 node.start()
 output = node.wait_for_finish()
@@ -23,6 +24,7 @@ data = {
 node = RHJob(
     node_name="hdctbet",
     inputs = data,
+    node_address = "localhost:9050",
 )
 node.start()
 output = node.wait_for_finish()

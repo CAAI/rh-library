@@ -1,0 +1,163 @@
+services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "9030:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "9031:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      RH_EMAIL_ON_ERROR: christian.hinge@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #Queue Node
+  manager:
+    image: rhnode/manager:v1.2.0-rc.1
+    expose:
+    - "8000"
+    labels:
+      - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
+    environment:
+      RH_OTHER_ADDRESSES:
+      RH_NAME: "titan5"
+      RH_MEMORY: 12
+      RH_GPU_MEM: "12"
+      RH_NUM_THREADS: 8
+      RH_EMAIL_ON_ERROR: christian.hinge@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #HD BET Node
+  hdbet:
+    image: rhnode/hdbet:v1.1.0_rhnode1.1.1
+    depends_on:
+      - manager
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #HD CTBET Node
+  hdctbet:
+    image: rhnode/hdctbet:v1.1.0_rhnode1.1.1
+    depends_on:
+      - manager
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.hdctbet.rule=PathPrefix(`/hdctbet`)"
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #FLIRT node
+  flirt:
+    image: rhnode/flirt:v0.1.0_rhnode1.2.0a.1
+    depends_on:
+      - manager
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.flirt.rule=PathPrefix(`/flirt`)"
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #reorient2std node
+  reorient2std:
+    image: rhnode/reorient2std:v0.1.0_rhnode1.1.1
+    depends_on:
+      - manager
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.reorient2std.rule=PathPrefix(`/reorient2std`)"
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+    
+  #Zerodose Node
+  zerodose:
+    image: rhnode/zerodose:v0.0.6_rhnode1.1.1
+    depends_on:
+      - hdbet
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.zerodose.rule=PathPrefix(`/zerodose`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: christian.hinge@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #AmyloidAI Node
+  amyloidai:
+    image: rhnode/amyloidai:v1.1.0_rhnode1.2.0a1
+    depends_on:
+      - hdbet
+      - hdctbet
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.amyloidai.rule=PathPrefix(`/amyloidai`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #AIMS Node
+  aims:
+    image: rhnode/aims:v0.1.0_rhnode1.2.0a.1
+    depends_on:
+      - hdbet
+      - reorient2std
+      - flirt
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.aims.rule=PathPrefix(`/aims`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+

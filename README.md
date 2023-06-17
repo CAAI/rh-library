@@ -24,9 +24,9 @@ Other tools, packaged in rh-node.
 | Node name  |Status |
 | ------------- | ------------- |
 | titan5 | Up |
+| titan6 | Up |
 
 ### Production (port 9040)
 | Node name | Status |
 | ------------- | ------------- |
 | caai1  |  *down* |
-| titan6 |  Up |

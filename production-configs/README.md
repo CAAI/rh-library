@@ -1,5 +1,63 @@
 # Enable rh-node to run on a new system
 
+## Install Docker
+### Set up the repository
+1. Update the apt package index and install packages to allow apt to use a repository over HTTPS:
+   ```
+   sudo apt-get update
+   sudo apt-get install ca-certificates curl gnupg
+   ```
+2. Add Docker’s official GPG key:
+   ```
+   sudo install -m 0755 -d /etc/apt/keyrings
+   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   sudo chmod a+r /etc/apt/keyrings/docker.gpg
+   ```
+3. Use the following command to set up the repository:
+   ```
+   echo \
+   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+   "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   ```
+### Install Docker Engine
+1. Update the apt package index:
+   
+   ```sudo apt-get update```
+2. Install Docker Engine, containerd, and Docker Compose.
+  
+   ```sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin```
+3. Verify that the Docker Engine installation is successful by running the hello-world image.
+   
+   ```sudo docker run hello-world```
+
+### Install CUDA with Docker
+1. Add the toolkit’s package repository to your system using the example command:
+
+   ```
+   distribution=$(. /etc/os-release;echo $ID$VERSION_ID) 
+   && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - 
+   && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+   ```
+2. Next install the nvidia-docker2 package on your host:
+
+   ```
+   sudo apt-get update
+   sudo apt-get install -y nvidia-docker2
+   ```
+4. Restart the Docker daemon to complete the installation:
+
+   ```
+   sudo systemctl restart docker
+   ```
+6. Test install
+   
+   ```
+   docker run -it --gpus all nvidia/cuda:11.4.0-base-ubuntu20.04 nvidia-smi
+   ```
+   
+
+
 ## Prepare yaml config
 - `sudo mkdir -p /etc/docker/compose/rh-node`
 - Copy `docker-compose.TEMPLATE.yaml` to that folder and rename it to `/etc/docker/compose/rh-node/docker-compose.yaml`

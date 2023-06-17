@@ -13,8 +13,7 @@ data = {
 node = RHJob(
     node_name="reorient2std",
     inputs = data,
-    #node_address="titan6.petnet.rh.dk:8010",
-    node_address="localhost:8010",
+    manager_address='localhost:9050',
     resources_included=True,
     check_cache=False,
     save_to_cache=False,
@@ -31,8 +30,7 @@ data = {
 node = RHJob(
     node_name="reorient2std",
     inputs = data,
-    #node_address="titan6.petnet.rh.dk:8010",
-    node_address="localhost:8010",
+    manager_address='localhost:9050',
     resources_included=True,
     check_cache=False,
     save_to_cache=False,
@@ -43,3 +41,5 @@ output = node.wait_for_finish()
 print(output)
 assert os.path.exists('reorient2std_1/ANAT_r2s.nii.gz')
 
+shutil.rmtree('reorient2std', ignore_errors=True)
+shutil.rmtree('reorient2std_1', ignore_errors=True)

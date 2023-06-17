@@ -17,7 +17,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:v1.1.1
+    image: rhnode/manager:v1.2.0
 
     expose:
     - "8000"
@@ -32,15 +32,7 @@ services:
       RH_NUM_THREADS: 6
 
   reorient2std:
-    image: rhnode/reorient2std:v0.1.0_rhnode1.1.1
     build: .
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: []
     expose:
       - "8000"
     

@@ -19,7 +19,7 @@ for d in data:
     node = RHJob(
         node_name="amyloidai",
         inputs = d,
-        manager_address='titan6:9050'
+        node_address='localhost:9050'
     )
 
     #Queue the node for execution

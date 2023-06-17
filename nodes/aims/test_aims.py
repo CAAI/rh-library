@@ -12,11 +12,8 @@ data = {
 node = RHJob(
     node_name="aims",
     inputs = data,
-    #node_address="titan6.petnet.rh.dk:8010",
-    #node_address = "localhost:8010",
-    manager_address='titan6:9050',
+    node_address = "localhost:9050",
     check_cache=False,
-    #output_directory=".",
 )
 
 #Queue the node for execution

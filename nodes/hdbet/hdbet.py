@@ -29,7 +29,7 @@ class HDBetNode(RHNode):
 
         all_env_vars = os.environ.copy()
         all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})
-        output = subprocess.check_output(cmd, text=True,env=all_env_vars)
+        _ = subprocess.check_output(cmd, text=True,env=all_env_vars)
 
         return HDBetOutput(masked_mr=out_mri, mask=out_mask)
 

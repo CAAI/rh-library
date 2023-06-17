@@ -11,7 +11,7 @@ RUN pip install git+https://github.com/CAAI/AIMS.git@v0.1
 RUN python -c "from AIMS import utils; [utils.maybe_download_parameters('FLAIR_T2_T1_orig', i) for i in range(4)]"
 
 #RH-Node
-RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0-a.1
+RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0
 
 #Changes frequently
 COPY requirements.txt /app/requirements.txt

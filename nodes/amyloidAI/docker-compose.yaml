@@ -17,7 +17,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:v1.2.0-a.1
+    image: rhnode/manager:v1.2.0
 
     expose:
     - "8000"
@@ -34,7 +34,7 @@ services:
 
   #HD BET Node
   hdbet:
-    image: rhnode/hdbet:v1.1.0_rhnode1.1.1
+    image: rhnode/hdbet:v1.1.0_rhnode1.2.0
 
     deploy:
       resources:
@@ -51,7 +51,7 @@ services:
 
   #HD CTBET Node
   hdctbet:
-    image: rhnode/hdctbet:v1.1.0_rhnode1.1.1
+    image: rhnode/hdctbet:v1.1.0_rhnode1.2.0
 
     deploy:
       resources:

@@ -8,7 +8,7 @@ RUN pip install git+https://github.com/CAAI/HD-CTBET.git@1.0.0
 RUN python -c "from HD_CTBET import utils; [utils.maybe_download_parameters(i) for i in range(5)]"
 
 # RH-Node
-RUN pip install git+https://github.com/CAAI/rh-node.git@v1.1.1
+RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0
 
 #Changes frequently
 COPY hdctbet.py /app/hdctbet.py

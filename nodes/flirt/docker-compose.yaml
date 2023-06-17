@@ -17,7 +17,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:v1.2.0-a.1
+    image: rhnode/manager:v1.2.0
 
     expose:
     - "8000"
@@ -33,15 +33,7 @@ services:
       RH_NUM_THREADS: 6
 
   flirt:
-    image: rhnode/flirt:v0.1.0_rhnode1.2.0a.1
     build: .
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: []
     expose:
       - "8000"
       

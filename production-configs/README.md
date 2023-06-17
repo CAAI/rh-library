@@ -1,3 +1,16 @@
+# Overview of active nodes at Rigshospitalet/CAAI
+
+## Research (port 9030)
+| Node name  |Status |
+| ------------- | ------------- |
+| titan5 | Up |
+
+## Production (port 9040)
+| Node name | Status |
+| ------------- | ------------- |
+| caai1  |  *down* |
+| titan6 |  Up |
+
 # Enable rh-node to run on a new system
 
 ## Install Docker

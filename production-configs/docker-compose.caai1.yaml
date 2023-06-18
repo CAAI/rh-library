@@ -27,8 +27,8 @@ services:
       RH_OTHER_ADDRESSES:
       RH_NAME: "caai1"
       RH_MEMORY: 12
-      RH_GPU_MEM: "12"
-      RH_NUM_THREADS: 8
+      RH_GPU_MEM: "5"
+      RH_NUM_THREADS: 12
       RH_EMAIL_ON_ERROR: christian.hinge@regionh.dk
       TZ: "Europe/Copenhagen"
 

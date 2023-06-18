@@ -29,4 +29,4 @@ Other tools, packaged in rh-node.
 ### Production (port 9040)
 | Node name | Status |
 | ------------- | ------------- |
-| caai1  |  *down* |
+| caai1  | Up |

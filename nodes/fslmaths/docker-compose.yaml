@@ -1,0 +1,44 @@
+version: "1"
+services:
+
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "9050:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "9051:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  #Queue Node
+  manager:
+    image: rhnode/manager:v1.2.0
+
+    expose:
+    - "8000"
+
+    labels:
+      - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
+
+    environment:
+      RH_NAME: "myhost"
+      RH_MEMORY: 12
+      RH_GPU_MEM: "8"
+      RH_NUM_THREADS: 6
+
+  fslmaths:
+    build: .
+    expose:
+      - "8000"
+    
+    ports:
+      - "8010:8000"
+      
+    labels:
+      - "traefik.http.routers.fslmaths.rule=PathPrefix(`/fslmaths`)"
+  

@@ -36,6 +36,12 @@ jobs:
           elif [[ "$VAL" == reorient2std-* ]]; then
             echo "::set-output name=dir::nodes/reorient2std"
             echo "::set-output name=image_name::reorient2std"
+          elif [[ "$VAL" == fslmaths-* ]]; then
+            echo "::set-output name=dir::nodes/fslmaths"
+            echo "::set-output name=image_name::fslmaths"
+          elif [[ "$VAL" == convertxfm-* ]]; then
+            echo "::set-output name=dir::nodes/convertxfm"
+            echo "::set-output name=image_name::convertxfm"
           elif [[ "$VAL" == zerodose_dicom-* ]]; then
             echo "::set-output name=dir::dicom_nodes/zerodose"
             echo "::set-output name=image_name::zerodose_dicom"

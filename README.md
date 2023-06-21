@@ -17,6 +17,8 @@ Other tools, packaged in rh-node.
 | [hdbet](nodes/hdbet) | MRI brain extraction |  | https://github.com/MIC-DKFZ/HD-BET |
 | [reorient2std](nodes/reorient2std) | (FSL) Reorient to standard orientation |  | https://fsl.fmrib.ox.ac.uk/fsl |
 | [flirt](nodes/flirt) | (FSL) Registration and resampling |  | https://fsl.fmrib.ox.ac.uk/fsl |
+| [convertxfm](nodes/convertXFM) | (FSL) Modify XFM files |  | https://fsl.fmrib.ox.ac.uk/fsl |
+| [fslmaths](nodes/fslmaths) | (FSL) Simple maths operations on nii files |  | https://fsl.fmrib.ox.ac.uk/fsl |
 
 ## Overview of active nodes at Rigshospitalet/CAAI
 

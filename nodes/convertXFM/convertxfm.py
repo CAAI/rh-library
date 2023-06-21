@@ -22,7 +22,7 @@ class ConvertXFMOutputs(BaseModel):
 class ConvertXFMNode(RHNode):
     input_spec = ConvertXFMInputs
     output_spec = ConvertXFMOutputs
-    name = "reorient2std"
+    name = "convertxfm"
     required_gb_gpu_memory = 0
     required_num_threads = 1
     required_gb_memory = 8

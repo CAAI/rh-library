@@ -9,6 +9,7 @@ Tools developed by members of CAAI, packaged in rh-node.
 | [hdctbet](nodes/hdctbet) | | CT brain extraction|  | https://github.com/CAAI/HD-CTBET |
 | [amyloidai](nodes/amyloidAI) | | Amyloid status estimation | hdbet, hdctbet | https://github.com/CAAI/amyloidAI |
 | [aims](nodes/aims) | | MS lesions segmentation | hdbet, flirt, reorient2std | https://github.com/CAAI/AIMS |
+| [brainPETNR](nodes/brainPETNR) | | PET denoising for PE2I and PiB| hdctbet, flirt, fslmaths, convertXFM | https://github.com/CAAI/brainPETNR |
 
 ## General purpose nodes
 Other tools, packaged in rh-node. 

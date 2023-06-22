@@ -85,6 +85,22 @@ services:
       RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
       TZ: "Europe/Copenhagen"
 
+  # ConvertXFM node
+  convertxfm:
+    image: rhnode/convertxfm:v0.2.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.convertxfm.rule=PathPrefix(`/convertxfm`)"
+
+  # fslmaths node
+  fslmaths:
+    image: rhnode/fslmaths:v0.1.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.fslmaths.rule=PathPrefix(`/fslmaths`)"
+
   #reorient2std node
   reorient2std:
     image: rhnode/reorient2std:v0.2.0_rhnode1.2.0

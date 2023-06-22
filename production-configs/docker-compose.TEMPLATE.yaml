@@ -6,9 +6,9 @@ services:
     command: --api.insecure=true --providers.docker
     ports:
       # The HTTP port
-      - "9040:80"
+      - "9030:80"
       # The Web UI (enabled by --api.insecure=true)
-      - "9041:8080"
+      - "9031:8080"
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
@@ -18,23 +18,23 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:v1.1.1
+    image: rhnode/manager:v1.2.0
     expose:
     - "8000"
     labels:
       - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
     environment:
       RH_OTHER_ADDRESSES:
-      RH_NAME: "titan6"
-      RH_MEMORY: 12
-      RH_GPU_MEM: "12"
-      RH_NUM_THREADS: 8
+      RH_NAME: <HOSTNAME>
+      RH_MEMORY: <MEMORY>
+      RH_GPU_MEM: "<GPU MEMORY>"
+      RH_NUM_THREADS: <NUMBER_OF_THREADS>
       RH_EMAIL_ON_ERROR: christian.hinge@regionh.dk
       TZ: "Europe/Copenhagen"
 
   #HD BET Node
   hdbet:
-    image: rhnode/hdbet:v1.1.0_rhnode1.1.1
+    image: rhnode/hdbet:v1.1.0_rhnode1.2.0
     depends_on:
       - manager
     deploy:
@@ -54,7 +54,7 @@ services:
 
   #HD CTBET Node
   hdctbet:
-    image: rhnode/hdctbet:v1.1.0_rhnode1.1.1
+    image: rhnode/hdctbet:v1.1.0_rhnode1.2.0
     depends_on:
       - manager
     deploy:
@@ -74,7 +74,7 @@ services:
 
   #FLIRT node
   flirt:
-    image: rhnode/flirt:v0.1.0_rhnode1.2.0a.1
+    image: rhnode/flirt:v0.2.0_rhnode1.2.0
     depends_on:
       - manager
     expose:
@@ -87,7 +87,7 @@ services:
 
   #reorient2std node
   reorient2std:
-    image: rhnode/reorient2std:v0.1.0_rhnode1.1.1
+    image: rhnode/reorient2std:v0.2.0_rhnode1.2.0
     depends_on:
       - manager
     expose:
@@ -97,6 +97,22 @@ services:
     environment:
       RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
       TZ: "Europe/Copenhagen"
+  
+  # ConvertXFM node
+  convertxfm:
+    image: rhnode/convertxfm:v0.2.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.convertxfm.rule=PathPrefix(`/convertxfm`)"
+
+  # fslmaths node
+  fslmaths:
+    image: rhnode/fslmaths:v0.1.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.fslmaths.rule=PathPrefix(`/fslmaths`)"
     
   #Zerodose Node
   zerodose:
@@ -120,7 +136,7 @@ services:
 
   #AmyloidAI Node
   amyloidai:
-    image: rhnode/amyloidai:v1.1.0_rhnode1.2.0a1
+    image: rhnode/amyloidai:v1.1.0_rhnode1.2.0
     depends_on:
       - hdbet
       - hdctbet
@@ -141,7 +157,7 @@ services:
 
   #AIMS Node
   aims:
-    image: rhnode/aims:v0.1.0_rhnode1.2.0a.1
+    image: rhnode/aims:v0.1.0_rhnode1.2.0
     depends_on:
       - hdbet
       - reorient2std
@@ -150,6 +166,29 @@ services:
       - "8000"
     labels:
       - "traefik.http.routers.aims.rule=PathPrefix(`/aims`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #brainPETNR Node
+  aims:
+    image: rhnode/brainpetnr:v0.1.0_rhnode1.2.0
+    depends_on:
+      - hdctbet
+      - fslmaths
+      - convertxfm
+      - flirt
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.brainpetnr.rule=PathPrefix(`/brainpetnr`)"
     deploy:
       resources:
         reservations:

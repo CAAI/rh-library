@@ -42,6 +42,9 @@ jobs:
           elif [[ "$VAL" == convertxfm-* ]]; then
             echo "::set-output name=dir::nodes/convertXFM"
             echo "::set-output name=image_name::convertxfm"
+          elif [[ "$VAL" == brainpetnr-* ]]; then
+            echo "::set-output name=dir::nodes/brainPETNR"
+            echo "::set-output name=image_name::brainpetnr"
           elif [[ "$VAL" == zerodose_dicom-* ]]; then
             echo "::set-output name=dir::dicom_nodes/zerodose"
             echo "::set-output name=image_name::zerodose_dicom"

@@ -24,7 +24,7 @@ services:
     labels:
       - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
     environment:
-      RH_OTHER_ADDRESSES: "titan6"
+      RH_OTHER_ADDRESSES: "titan6:9030"
       RH_NAME: "titan5"
       RH_MEMORY: 12
       RH_GPU_MEM: "12"

@@ -24,7 +24,7 @@ services:
     labels:
       - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
     environment:
-      RH_OTHER_ADDRESSES:
+      RH_OTHER_ADDRESSES: "titan6"
       RH_NAME: "titan5"
       RH_MEMORY: 12
       RH_GPU_MEM: "12"
@@ -97,6 +97,22 @@ services:
     environment:
       RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
       TZ: "Europe/Copenhagen"
+
+  # ConvertXFM node
+  convertxfm:
+    image: rhnode/convertxfm:v0.2.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.convertxfm.rule=PathPrefix(`/convertxfm`)"
+
+  # fslmaths node
+  fslmaths:
+    image: rhnode/fslmaths:v0.1.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.fslmaths.rule=PathPrefix(`/fslmaths`)"
     
   #Zerodose Node
   zerodose:
@@ -150,6 +166,29 @@ services:
       - "8000"
     labels:
       - "traefik.http.routers.aims.rule=PathPrefix(`/aims`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #brainPETNR Node
+  aims:
+    image: rhnode/brainpetnr:v0.1.0_rhnode1.2.0
+    depends_on:
+      - hdctbet
+      - fslmaths
+      - convertxfm
+      - flirt
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.brainpetnr.rule=PathPrefix(`/brainpetnr`)"
     deploy:
       resources:
         reservations:

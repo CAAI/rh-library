@@ -1,0 +1,159 @@
+services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "9040:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "9041:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #Queue Node
+  manager:
+    image: rhnode/manager:v1.2.0
+    expose:
+    - "8000"
+    labels:
+      - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
+    environment:
+      RH_OTHER_ADDRESSES:
+      RH_NAME: "titan7"
+      RH_MEMORY: 24
+      RH_GPU_MEM: "24"
+      RH_NUM_THREADS: 8
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #HD BET Node
+  hdbet:
+    image: rhnode/hdbet:v1.1.0_rhnode1.2.0
+    depends_on:
+      - manager
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #HD CTBET Node
+  hdctbet:
+    image: rhnode/hdctbet:v1.1.0_rhnode1.2.0
+    depends_on:
+      - manager
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.hdctbet.rule=PathPrefix(`/hdctbet`)"
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #FLIRT node
+  flirt:
+    image: rhnode/flirt:v0.2.0_rhnode1.2.0
+    depends_on:
+      - manager
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.flirt.rule=PathPrefix(`/flirt`)"
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #reorient2std node
+  reorient2std:
+    image: rhnode/reorient2std:v0.2.0_rhnode1.2.0
+    depends_on:
+      - manager
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.reorient2std.rule=PathPrefix(`/reorient2std`)"
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+  
+  # ConvertXFM node
+  convertxfm:
+    image: rhnode/convertxfm:v0.2.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.convertxfm.rule=PathPrefix(`/convertxfm`)"
+
+  # fslmaths node
+  fslmaths:
+    image: rhnode/fslmaths:v0.1.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.fslmaths.rule=PathPrefix(`/fslmaths`)"
+
+  #AmyloidAI Node
+  amyloidai:
+    image: rhnode/amyloidai:v1.1.0_rhnode1.2.0
+    depends_on:
+      - hdbet
+      - hdctbet
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.amyloidai.rule=PathPrefix(`/amyloidai`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #brainPETNR Node
+  brainpetnr:
+    image: rhnode/brainpetnr:v0.1.0_rhnode1.2.0
+    depends_on:
+      - hdctbet
+      - fslmaths
+      - convertxfm
+      - flirt
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.brainpetnr.rule=PathPrefix(`/brainpetnr`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"

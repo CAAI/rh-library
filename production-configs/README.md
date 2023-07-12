@@ -61,7 +61,7 @@
 5. Test install
    
    ```
-   docker run -it --gpus all nvidia/cuda:11.4.0-base-ubuntu20.04 nvidia-smi
+   docker run -it --gpus all nvidia/cuda:12.2.0-runtime-ubuntu22.04 nvidia-smi
    ```
 6. Ensure that installing docker wont lock out ssh access. See [here](https://github.com/CAAI/rh-node/blob/main/docs/docker_and_ssh.md).
    

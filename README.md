@@ -33,3 +33,4 @@ Other tools, packaged in rh-node.
 | Node name | Status |
 | ------------- | ------------- |
 | caai1  | Up |
+| titan7  | Up |

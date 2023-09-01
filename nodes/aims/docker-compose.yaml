@@ -66,6 +66,7 @@ services:
       - "traefik.http.routers.reorient2std.rule=PathPrefix(`/reorient2std`)"
   
   aims:
+    image: rhnode/aims:v0.2.0
     build: .
     expose:
       - "8000"

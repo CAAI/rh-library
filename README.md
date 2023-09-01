@@ -28,6 +28,7 @@ Other tools, packaged in rh-node.
 | ------------- | ------------- |
 | titan5 | Up |
 | titan6 | Up |
+| aims   | Up |
 
 ### Production (port 9040)
 | Node name | Status |

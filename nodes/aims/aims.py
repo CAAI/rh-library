@@ -12,6 +12,7 @@ class AIMSInputs(BaseModel):
     flair: FilePath
     t2: FilePath
     t1: Optional[FilePath] = None
+    model_name: Optional[str] = None
     out_filename: str
     do_preprocess: Optional[bool] = False
 
@@ -153,6 +154,9 @@ class AIMSNode(RHNode):
         cmd = ['AIMS', '-flair', files[0], '-t2', files[1], '-o', str(out_args['mask'])]
         if inputs.t1 is not None:
             cmd += ['-t1', files[2]]
+
+        if inputs.model_name is not None:
+            cmd += ['--model_name', inputs.model_name]
 
         all_env_vars = os.environ.copy()
         all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})

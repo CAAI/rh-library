@@ -5,10 +5,12 @@ RUN apt-get update -qq \
         git
 
 # AIMS
-RUN pip install git+https://github.com/CAAI/AIMS.git@v0.1
+RUN pip install git+https://github.com/CAAI/AIMS.git@v0.2
 
 # Trigger download of parameter files
-RUN python -c "from AIMS import utils; [utils.maybe_download_parameters('FLAIR_T2_T1_orig', i) for i in range(4)]"
+RUN python -c "from AIMS import utils; [utils.maybe_download_parameters('FLAIR_T2_T1_orig', i) for i in range(5)]"
+RUN python -c "from AIMS import utils; [utils.maybe_download_parameters('FLAIR_T2_T1_TL', i) for i in range(5)]"
+RUN python -c "from AIMS import utils; [utils.maybe_download_parameters('FLAIR_T2_orig', i) for i in range(5)]"
 
 #RH-Node
 RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0

@@ -157,7 +157,7 @@ services:
 
   #AIMS Node
   aims:
-    image: rhnode/aims:v0.1.0_rhnode1.2.0
+    image: rhnode/aims:v0.2.0_rhnode1.2.0
     depends_on:
       - hdbet
       - reorient2std

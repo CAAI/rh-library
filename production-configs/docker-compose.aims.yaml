@@ -13,7 +13,7 @@ services:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      RH_EMAIL_ON_ERROR: christian.hinge@regionh.dk
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
       TZ: "Europe/Copenhagen"
 
   #Queue Node
@@ -25,11 +25,11 @@ services:
       - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
     environment:
       RH_OTHER_ADDRESSES:
-      RH_NAME: <HOSTNAME>
-      RH_MEMORY: <MEMORY>
-      RH_GPU_MEM: "<GPU MEMORY>"
-      RH_NUM_THREADS: <NUMBER_OF_THREADS>
-      RH_EMAIL_ON_ERROR: christian.hinge@regionh.dk
+      RH_NAME: "aims"
+      RH_MEMORY: 512
+      RH_GPU_MEM: "15"
+      RH_NUM_THREADS: 24
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
       TZ: "Europe/Copenhagen"
 
   #HD BET Node

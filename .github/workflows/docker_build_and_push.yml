@@ -30,6 +30,9 @@ jobs:
           elif [[ "$VAL" == aims-* ]]; then
             echo "::set-output name=dir::nodes/aims"
             echo "::set-output name=image_name::aims"
+          elif [[ "$VAL" == totalsegmentator-* ]]; then
+            echo "::set-output name=dir::nodes/totalsegmentator"
+            echo "::set-output name=image_name::totalsegmentator"
           elif [[ "$VAL" == flirt-* ]]; then
             echo "::set-output name=dir::nodes/flirt"
             echo "::set-output name=image_name::flirt"

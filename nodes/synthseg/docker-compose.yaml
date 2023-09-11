@@ -34,10 +34,10 @@ services:
 
 
 
-  # TotalSegmentator Node
-  totalsegmentator:
+  # SynthSeg Node
+  synthseg:
     build: .
-    image: rhnode/totalsegmentator:v1.0.0_rhnode1.2.0
+    image: rhnode/synthseg:v1.0.0_rhnode1.2.0
     deploy:
       resources:
         reservations:
@@ -49,5 +49,5 @@ services:
       - "8000"
       
     labels:
-      - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)"
+      - "traefik.http.routers.synthseg.rule=PathPrefix(`/synthseg`)"
   

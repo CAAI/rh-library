@@ -1,5 +1,5 @@
 from rhnode import RHNode
-from pydantic import BaseModel, FilePath
+from pydantic import BaseModel, FilePath, DirectoryPath
 from typing import Optional
 import subprocess
 import os
@@ -10,20 +10,20 @@ class TotalSegmentatorInput(BaseModel):
     roi_subset:Optional[str]=""
 
 class TotalSegmentatorOutput(BaseModel):
-    output_directory:FilePath
+    out_segmentation:FilePath
 
-class HDBetNode(RHNode):
+class TotalSegmentatorNode(RHNode):
     input_spec = TotalSegmentatorInput
     output_spec = TotalSegmentatorOutput
     name = "totalsegmentator"
-    required_gb_gpu_memory = 12
+    required_gb_gpu_memory = 6
     required_num_threads = 2
     required_gb_memory = 12    
 
     def process(inputs, job):
-        out_dir = job.directory
+        out_file = job.directory / 'segmentation.nii.gz'
 
-        cmd = ["TotalSegmentator", "-i", str(inputs.in_file), "-o", str(out_dir)]
+        cmd = ["TotalSegmentator", "-i", str(inputs.in_file), "-o", str(out_file), "--ml"]
         
         if inputs.fast:
             cmd += ['--fast']
@@ -33,8 +33,8 @@ class HDBetNode(RHNode):
 
         all_env_vars = os.environ.copy()
         all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})
-        _ = subprocess.check_output(cmd, text=True,env=all_env_vars)
+        out = subprocess.check_output(cmd, text=True,env=all_env_vars)
 
-        return TotalSegmentatorOutput(output_directory=out_dir)
+        return TotalSegmentatorOutput(out_segmentation=out_file)
 
-app = HDBetNode()
+app = TotalSegmentatorNode()

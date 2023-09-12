@@ -2,7 +2,7 @@ from rhnode import RHJob
 
 data = {
     "in_file": "/homes/claes/projects/LowdosePET/PE2I/data_Vision/nii/0rCyjRXXbm_0/ACCT.nii.gz",
-    '--ct':
+    "xargs": '--ct --fast --crop 90'
 }
 
 node = RHJob(

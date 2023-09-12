@@ -202,11 +202,29 @@ services:
 
   #totalsegmentator Node
   totalsegmentator:
-    image: rhnode/totalsegmentator:v1.5.6_rhnode1.2.0
+    image: rhnode/totalsegmentator:v1.0.0_rhnode1.2.0
     expose:
       - "8000"
     labels:
       - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #synthseg Node
+  synthseg:
+    image: rhnode/synthseg:v1.0.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.synthseg.rule=PathPrefix(`/synthseg`)"
     deploy:
       resources:
         reservations:

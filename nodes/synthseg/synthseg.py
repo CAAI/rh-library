@@ -15,14 +15,14 @@ class SynthSegNode(RHNode):
     input_spec = SynthSegInput
     output_spec = SynthSegOutput
     name = "synthseg"
-    required_gb_gpu_memory = 12
+    required_gb_gpu_memory = 15
     required_num_threads = 2
     required_gb_memory = 12    
 
     def process(inputs, job):
         out_file = job.directory / 'segmentation.nii.gz'
 
-        cmd = ["python", "./scripts/commands/SynthSeg_predict.py", "--i", str(inputs.in_file), "--o", str(out_file)]
+        cmd = ["python", "/SynthSeg/scripts/commands/SynthSeg_predict.py", "--i", str(inputs.in_file), "--o", str(out_file)]
         
         if not inputs.xargs == "":
             cmd += inputs.xargs.split(' ')

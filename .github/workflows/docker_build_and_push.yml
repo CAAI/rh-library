@@ -48,6 +48,9 @@ jobs:
           elif [[ "$VAL" == brainpetnr-* ]]; then
             echo "::set-output name=dir::nodes/brainPETNR"
             echo "::set-output name=image_name::brainpetnr"
+          elif [[ "$VAL" == pe2idenoiser-* ]]; then
+            echo "::set-output name=dir::nodes/pe2idenoiser"
+            echo "::set-output name=image_name::pe2idenoiser"
           elif [[ "$VAL" == zerodose_dicom-* ]]; then
             echo "::set-output name=dir::dicom_nodes/zerodose"
             echo "::set-output name=image_name::zerodose_dicom"

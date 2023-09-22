@@ -200,3 +200,25 @@ services:
       RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
       TZ: "Europe/Copenhagen"
 
+  #PE2I_denoiser Node
+  pe2idenoiser:
+    image: rhnode/pe2idenoiser:v0.1.0_rhnode1.2.0
+    depends_on:
+      - hdctbet
+      - fslmaths
+      - convertxfm
+      - flirt
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.pe2idenoiser.rule=PathPrefix(`/pe2idenoiser`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"

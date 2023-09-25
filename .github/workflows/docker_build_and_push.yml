@@ -16,55 +16,55 @@ jobs:
         id: step1
         run: |
           VAL=${{github.event.release.tag_name}}
-          echo "name=valid::true" >> $GITHUB_OUTPUT
+          echo "valid=true" >> $GITHUB_OUTPUT
           if [[ "$VAL" == zerodose-* ]]; then
-            echo "name=dir::nodes/zerodose" >> $GITHUB_OUTPUT
-            echo "name=image_name::zerodose" >> $GITHUB_OUTPUT
+            echo "dir=nodes/zerodose" >> $GITHUB_OUTPUT
+            echo "image_zerodose" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == hdbet-* ]]; then
-            echo "name=dir::nodes/hdbet" >> $GITHUB_OUTPUT
-            echo "name=image_name::hdbet" >> $GITHUB_OUTPUT
+            echo "dir=nodes/hdbet" >> $GITHUB_OUTPUT
+            echo "image_name=hdbet" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == hdctbet-* ]]; then
-            echo "name=dir::nodes/hdctbet" >> $GITHUB_OUTPUT
-            echo "name=image_name::hdctbet" >> $GITHUB_OUTPUT
+            echo "dir=nodes/hdctbet" >> $GITHUB_OUTPUT
+            echo "image_name=hdctbet" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == amyloidai-* ]]; then
-            echo "name=dir::nodes/amyloidAI" >> $GITHUB_OUTPUT
-            echo "name=image_name::amyloidai" >> $GITHUB_OUTPUT
+            echo "dir=nodes/amyloidAI" >> $GITHUB_OUTPUT
+            echo "image_name=amyloidai" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == aims-* ]]; then
-            echo "name=dir::nodes/aims" >> $GITHUB_OUTPUT
-            echo "name=image_name::aims" >> $GITHUB_OUTPUT
+            echo "dir=nodes/aims" >> $GITHUB_OUTPUT
+            echo "image_name=aims" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == totalsegmentator-* ]]; then
-            echo "name=dir::nodes/totalsegmentator" >> $GITHUB_OUTPUT
-            echo "name=image_name::totalsegmentator" >> $GITHUB_OUTPUT
+            echo "dir=nodes/totalsegmentator" >> $GITHUB_OUTPUT
+            echo "image_name=totalsegmentator" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == flirt-* ]]; then
-            echo "name=dir::nodes/flirt" >> $GITHUB_OUTPUT
-            echo "name=image_name::flirt" >> $GITHUB_OUTPUT
+            echo "dir=nodes/flirt" >> $GITHUB_OUTPUT
+            echo "image_name=flirt" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == reorient2std-* ]]; then
-            echo "name=dir::nodes/reorient2std" >> $GITHUB_OUTPUT
-            echo "name=image_name::reorient2std" >> $GITHUB_OUTPUT
+            echo "dir=nodes/reorient2std" >> $GITHUB_OUTPUT
+            echo "image_name=reorient2std" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == fslmaths-* ]]; then
-            echo "name=dir::nodes/fslmaths" >> $GITHUB_OUTPUT
-            echo "name=image_name::fslmaths" >> $GITHUB_OUTPUT
+            echo "dir=nodes/fslmaths" >> $GITHUB_OUTPUT
+            echo "image_name=fslmaths" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == convertxfm-* ]]; then
-            echo "name=dir::nodes/convertXFM" >> $GITHUB_OUTPUT
-            echo "name=image_name::convertxfm" >> $GITHUB_OUTPUT
+            echo "dir=nodes/convertXFM" >> $GITHUB_OUTPUT
+            echo "image_name=convertxfm" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == brainpetnr-* ]]; then
-            echo "name=dir::nodes/brainPETNR" >> $GITHUB_OUTPUT
-            echo "name=image_name::brainpetnr" >> $GITHUB_OUTPUT
+            echo "dir=nodes/brainPETNR" >> $GITHUB_OUTPUT
+            echo "image_name=brainpetnr" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == pe2idenoiser-* ]]; then
-            echo "name=dir::nodes/pe2idenoiser" >> $GITHUB_OUTPUT
-            echo "name=image_name::pe2idenoiser" >> $GITHUB_OUTPUT
+            echo "dir=nodes/pe2idenoiser" >> $GITHUB_OUTPUT
+            echo "image_name=pe2idenoiser" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == zerodose_dicom-* ]]; then
-            echo "name=dir::dicom_nodes/zerodose" >> $GITHUB_OUTPUT
-            echo "name=image_name::zerodose_dicom" >> $GITHUB_OUTPUT
+            echo "dir=dicom_nodes/zerodose" >> $GITHUB_OUTPUT
+            echo "image_name=zerodose_dicom" >> $GITHUB_OUTPUT
           else
-            echo "name=valid::false" >> $GITHUB_OUTPUT
+            echo "valid=false" >> $GITHUB_OUTPUT
           fi
       - name: Split branch name
         if : ${{steps.step1.outputs.valid == 'true'}}
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
         id: split
-        run: echo "name=version::${TAG_NAME##*-}" >> $GITHUB_OUTPUT
+        run: echo "version=${TAG_NAME##*-}" >> $GITHUB_OUTPUT
       - 
         name: Set up QEMU
         if : ${{steps.step1.outputs.valid == 'true'}}

@@ -16,7 +16,7 @@ class PE2IDenoiserInputs(BaseModel):
     out_filename: str
     scaling_factor: Optional[float] = 1.0
     add_blurring: Optional[bool] = True
-    model: Optional[str] = 'Vision_TLmCT_5pct_v3'
+    model: Optional[str] = 'Vision_TLmCT_1-5pct'
 
 
 class PE2IDenoiserOutputs(BaseModel):

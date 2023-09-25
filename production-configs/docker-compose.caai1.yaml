@@ -103,7 +103,7 @@ services:
 
   #reorient2std node
   reorient2std:
-    image: rhnode/reorient2std:v0.2.0_rhnode1.2.0
+    image: rhnode/reorient2std:v0.3.0_rhnode1.2.0
     depends_on:
       - manager
     expose:

@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check disk space
+        run: df . -h
       - name: Identify node
         id: step1
         run: |

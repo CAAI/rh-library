@@ -59,14 +59,22 @@ services:
 
   #reorient2std node
   reorient2std:
-    image: rhnode/reorient2std:v0.2.0_rhnode1.2.0
+    image: rhnode/reorient2std:v0.3.0_rhnode1.2.0
     expose:
       - "8000"
     labels:
       - "traefik.http.routers.reorient2std.rule=PathPrefix(`/reorient2std`)"
+
+  # ConvertXFM node
+  convertxfm:
+    image: rhnode/convertxfm:v0.2.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.convertxfm.rule=PathPrefix(`/convertxfm`)"
   
   aims:
-    image: rhnode/aims:v0.2.0_rhnode1.2.0
+    image: rhnode/aims:v0.3.0_rhnode1.2.0
     build: .
     expose:
       - "8000"

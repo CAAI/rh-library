@@ -6,6 +6,7 @@ import nibabel as nib
 import numpy as np
 import os
 import shutil
+import time
 
 
 class AIMSInputs(BaseModel):
@@ -15,6 +16,7 @@ class AIMSInputs(BaseModel):
     model_name: Optional[str] = None
     out_filename: str
     do_preprocess: Optional[bool] = False
+    output_in_FLAIR_space: Optional[bool] = True
 
 
 class AIMSOutputs(BaseModel):
@@ -22,6 +24,7 @@ class AIMSOutputs(BaseModel):
     flair_bet: Optional[FilePath] = None
     t2_bet: Optional[FilePath] = None
     t1_bet: Optional[FilePath] = None
+    node_running_time: float
 
 
 class AIMSNode(RHNode):
@@ -35,6 +38,8 @@ class AIMSNode(RHNode):
     
 
     def process(inputs, job):
+
+        start_time = time.time()
 
         out_args = {}
 
@@ -53,14 +58,16 @@ class AIMSNode(RHNode):
             reorient_nodes = []
             for f in files:
                 reorient_nodes.append(
-                    RHJob.from_parent_job("reorient2std", {'in_file': f}, job, use_same_resources=True)
+                    RHJob.from_parent_job("reorient2std", {'in_file': f, 'output_matrix': True}, job, use_same_resources=True)
                 )
             # Start nodes in parallel
             for node in reorient_nodes:
                 node.start()
+            reorient_output_matrix = []
             for ind, node in enumerate(reorient_nodes):
                 reorient_output = node.wait_for_finish()
                 files[ind] = reorient_output['out']
+                reorient_output_matrix.append(reorient_output['out_matrix'])
 
             # save the current files, we will use the transformations from
             # the registrations AFTER BET to register them to a reference space
@@ -149,9 +156,9 @@ class AIMSNode(RHNode):
             for f, n in zip(files, names):
                 out_args[n.lower()+'_bet'] = f
         
-        out_args['mask'] = job.directory / inputs.out_filename
+        AIMS_predicted = job.directory / 'AIMS_predicted.nii.gz'
         # Call AIMS 
-        cmd = ['AIMS', '-flair', files[0], '-t2', files[1], '-o', str(out_args['mask'])]
+        cmd = ['AIMS', '-flair', files[0], '-t2', files[1], '-o', str(AIMS_predicted)]
         if inputs.t1 is not None:
             cmd += ['-t1', files[2]]
 
@@ -161,8 +168,79 @@ class AIMSNode(RHNode):
         all_env_vars = os.environ.copy()
         all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})
         _ = subprocess.check_output(cmd, text=True, env=all_env_vars)
-        
-        return AIMSOutputs(**out_args)
+
+        AIMS_output = job.directory / inputs.out_filename
+        if not inputs.do_preprocess:
+            shutil.copyfile(AIMS_predicted, AIMS_output)
+            return AIMSOutputs(mask=AIMS_output, node_running_time = time.time()-start_time)
+        else:
+            if inputs.output_in_FLAIR_space:
+                
+                # Invert Reorient2Std 
+                invert_2std_node = RHJob.from_parent_job("convertxfm", {
+                        'in_file': reorient_output_matrix[0],  # FLAIR 2std mat
+                        'inverse': True,
+                        'out_file': 'inverted_2std.xfm'
+                    }, job, use_same_resources=True)
+                invert_2std_node.start()
+                invert_2std_output = invert_2std_node.wait_for_finish()
+                invert_2std_omat = invert_2std_output['out']    
+                
+                if ref_index == 0: # Ref_index==0 is FLAIR
+                    # Invert 2std
+                    flirt_inputs = {"in_file": AIMS_predicted, 
+                                    "ref_file": inputs.flair,
+                                    "init_file": invert_2std_omat,
+                                    "out_file": 'AIMS_FLAIR_SPACE.nii.gz',
+                                    "applyxfm": True,
+                                    "xargs": "-interp nearestneighbour"}
+                    flirt_FLAIR_space = RHJob.from_parent_job("flirt", flirt_inputs, job, use_same_resources=True)
+                    flirt_FLAIR_space.start()
+                    flirt_FLAIR_space_output  = flirt_FLAIR_space.wait_for_finish()
+                    
+                    shutil.copyfile(flirt_FLAIR_space_output['out'], AIMS_output)
+
+                else: # Ref is not FLAIR - revert registration
+
+                    # Invert registration XFM
+                    invert_node = RHJob.from_parent_job("convertxfm", {
+                            'in_file': omat_files[0],  # FLAIR to REF mat
+                            'inverse': True,
+                            'out_file': 'inverted.xfm'
+                        }, job, use_same_resources=True)
+                    invert_node.start()
+                    invert_output = invert_node.wait_for_finish()
+                    invert_omat = invert_output['out']    
+
+                    flirt_inputs = {"in_file": AIMS_predicted, 
+                                    "ref_file": files_r2s[0], # FLAIR in STD space
+                                    "init_file": invert_omat,
+                                    "out_file": 'AIMS_FLAIR_2STD_SPACE.nii.gz',
+                                    "applyxfm": True,
+                                    "xargs": "-interp nearestneighbour"}
+                    flirt_FLAIR_2std_space = RHJob.from_parent_job("flirt", flirt_inputs, job, use_same_resources=True)
+                    flirt_FLAIR_2std_space.start()
+                    flirt_FLAIR_2std_space_output  = flirt_FLAIR_2std_space.wait_for_finish()
+
+                    # Invert 2std
+                    flirt_inputs = {"in_file": flirt_FLAIR_2std_space_output['out'], 
+                                    "ref_file": inputs.flair,
+                                    "init_file": invert_2std_omat,
+                                    "out_file": 'AIMS_FLAIR_SPACE.nii.gz',
+                                    "applyxfm": True,
+                                    "xargs": "-interp nearestneighbour"}
+                    flirt_FLAIR_space = RHJob.from_parent_job("flirt", flirt_inputs, job, use_same_resources=True)
+                    flirt_FLAIR_space.start()
+                    flirt_FLAIR_space_output  = flirt_FLAIR_space.wait_for_finish()
+                    
+                    shutil.copyfile(flirt_FLAIR_space_output['out'], AIMS_output)
+                   
+            else:
+                shutil.copyfile(AIMS_predicted, AIMS_output)
+
+            out_args['mask'] = AIMS_output
+            out_args['node_running_time'] = time.time()-start_time
+            return AIMSOutputs(**out_args)
 
 
 app = AIMSNode()

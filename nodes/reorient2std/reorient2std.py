@@ -34,6 +34,7 @@ class Reorient2stdNode(RHNode):
         if inputs.output_matrix:
                outpath_xfm = job.directory / str(inputs.out_file).replace('.nii.gz', '.xfm') if inputs.out_file is not None else job.directory / os.path.basename(inputs.in_file).replace('.nii.gz', '_r2s.xfm')
                cmd += ['-m', outpath_xfm]
+               
         
         # Add <input> <output>
         cmd += [str(inputs.in_file), str(outpath)]
@@ -41,7 +42,10 @@ class Reorient2stdNode(RHNode):
         all_env_vars = os.environ.copy()
         output = subprocess.check_output(cmd, text=True,env=all_env_vars)
     
-        return Reorient2stdOutputs(out=outpath, out_message=output)
+        if inputs.output_matrix:
+            return Reorient2stdOutputs(out=outpath, out_message=output, out_matrix=outpath_xfm)
+        else:     
+            return Reorient2stdOutputs(out=outpath, out_message=output)
 
 
 app = Reorient2stdNode()

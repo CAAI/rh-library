@@ -5,7 +5,7 @@ RUN apt-get update -qq \
         git
 
 # pe2iDenoiser
-RUN pip install git+https://github.com/CAAI/PE2I_denoiser.git@v0.1
+RUN pip install git+https://github.com/CAAI/PE2I_denoiser.git@v0.2
 
 # Trigger download of parameter files
 RUN python -c "from PE2I_denoiser import utils; utils.maybe_download_parameters_and_template()"

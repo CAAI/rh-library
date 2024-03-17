@@ -29,7 +29,7 @@ class TotalSegmentatorNode(RHNode):
             cmd += ['--fast']
         
         if not inputs.roi_subset == "":
-            cmd += ['--roi_subset',inputs.roi_subset]
+            cmd += ['--roi_subset'] + inputs.roi_subset.split(" ")
 
         all_env_vars = os.environ.copy()
         all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})

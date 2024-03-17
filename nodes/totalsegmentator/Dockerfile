@@ -3,11 +3,11 @@ FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
 RUN apt-get update
 RUN apt-get install git -y
 
-#General requirements
+# #General requirements
 RUN pip install git+https://github.com/wasserth/TotalSegmentator.git
-RUN python -c "from totalsegmentator.libs import download_pretrained_weights; [download_pretrained_weights(task_id) for task_id in [251, 252, 253, 254, 255, 256]]"
+RUN python -c "from totalsegmentator.libs import download_pretrained_weights; [download_pretrained_weights(task_id) for task_id in [291, 292, 293, 294, 295, 297, 298, 258, 150, 260, 503, 315, 299, 300]]"
 
-#RH-Node
+# #RH-Node
 RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0
 
 COPY totalsegmentator.py /app/totalsegmentator.py

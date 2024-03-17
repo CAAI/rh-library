@@ -32,8 +32,6 @@ services:
       RH_GPU_MEM: "8"
       RH_NUM_THREADS: 6
 
-
-
   # TotalSegmentator Node
   totalsegmentator:
     build: 

@@ -202,7 +202,7 @@ services:
       
   #Totalsegmentator Node
   totalsegmentator:
-    image: rhnode/totalsegmentator:v1.0.0_rhnode1.2.0
+    image: rhnode/totalsegmentator:v1.0.1_rhnode1.2.0
     shm_size: '24gb'
     deploy:
       resources:

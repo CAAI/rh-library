@@ -16,7 +16,7 @@ class TotalSegmentatorNode(RHNode):
     input_spec = TotalSegmentatorInput
     output_spec = TotalSegmentatorOutput
     name = "totalsegmentator"
-    required_gb_gpu_memory = 15
+    required_gb_gpu_memory = 12
     required_num_threads = 2
     required_gb_memory = 12    
 

@@ -11,12 +11,8 @@ data = {
 node = RHJob(
     node_name="totalsegmentator",
     inputs=data,
-    #manager_address="aims:9030",
-    #node_address='localhost:8009',
-    #node_address='localhost:8010',
+    manager_address="titan5:9030",
     check_cache=False,
-    resources_included=True,
-    included_cuda_device=0
 )
 # Wait for the node to finish
 node.start()

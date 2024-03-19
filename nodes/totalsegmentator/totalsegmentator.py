@@ -3,6 +3,8 @@ from pydantic import BaseModel, FilePath, DirectoryPath
 from typing import Optional
 import subprocess
 import os
+import nibabel as nib
+
 
 class TotalSegmentatorInput(BaseModel):
     in_file:FilePath
@@ -11,6 +13,8 @@ class TotalSegmentatorInput(BaseModel):
 
 class TotalSegmentatorOutput(BaseModel):
     out_segmentation:FilePath
+    out_version:str
+    out_args:str
 
 class TotalSegmentatorNode(RHNode):
     input_spec = TotalSegmentatorInput
@@ -23,18 +27,30 @@ class TotalSegmentatorNode(RHNode):
     def process(inputs, job):
         out_file = job.directory / 'segmentation.nii.gz'
 
-        cmd = ["TotalSegmentator", "-i", str(inputs.in_file), "-o", str(out_file), "--ml"]
+        cmd = ["TotalSegmentator", "-i", str(inputs.in_file), "-o", str(out_file)]
+
+        cmd_args = ["--ml"]
         
         if inputs.fast:
-            cmd += ['--fast']
+            cmd_args += ['--fast']
         
+        shape = nib.load(str(inputs.in_file)).shape
+        if shape[-1] > 590:
+            print("Large image, running with --body_seg --force_split --nr_thr_saving 1")
+            cmd_args+=["--body_seg","--force_split","--nr_thr_saving","1"]
+
         if not inputs.roi_subset == "":
-            cmd += ['--roi_subset'] + inputs.roi_subset.split(" ")
+            cmd_args += ['--roi_subset'] + inputs.roi_subset.split(" ")
 
         all_env_vars = os.environ.copy()
         all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})
-        out = subprocess.check_output(cmd, text=True,env=all_env_vars)
+        
+        print("TOTALSEGMENTATOR STARTING VERSION")
+        version = subprocess.check_output("TotalSegmentator --version".split(" "),env=all_env_vars)        
+        print("TOTALSEGMENTATOR STARTING SEGMENTATION")
+        out = subprocess.check_output(cmd+cmd_args, text=True,env=all_env_vars)
+        print("TOTALSEGMENTATOR ENDING")
 
-        return TotalSegmentatorOutput(out_segmentation=out_file)
+        return TotalSegmentatorOutput(out_segmentation=out_file,out_version=version,out_args=" ".join(cmd_args))
 
 app = TotalSegmentatorNode()

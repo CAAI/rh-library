@@ -11,6 +11,7 @@ class TotalSegmentatorInput(BaseModel):
 
 class TotalSegmentatorOutput(BaseModel):
     out_segmentation:FilePath
+    out_version:str
 
 class TotalSegmentatorNode(RHNode):
     input_spec = TotalSegmentatorInput
@@ -33,8 +34,10 @@ class TotalSegmentatorNode(RHNode):
 
         all_env_vars = os.environ.copy()
         all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})
-        out = subprocess.check_output(cmd, text=True,env=all_env_vars)
 
+        version = subprocess.check_output("TotalSegmentator --version".split(" "),env=all_env_vars)        
+        out = subprocess.check_output(cmd, text=True,env=all_env_vars)
+        
         return TotalSegmentatorOutput(out_segmentation=out_file)
 
 app = TotalSegmentatorNode()

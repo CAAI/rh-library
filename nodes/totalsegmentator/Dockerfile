@@ -8,7 +8,7 @@ RUN pip install git+https://github.com/wasserth/TotalSegmentator.git
 RUN python -c "from totalsegmentator.libs import download_pretrained_weights; [download_pretrained_weights(task_id) for task_id in [291, 292, 293, 294, 295, 297, 298, 258, 150, 260, 503, 315, 299, 300]]"
 
 # #RH-Node
-RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0
+RUN pip install git+https://github.com/CAAI/rh-node.git@v1.3.0-a.6
 
 COPY totalsegmentator.py /app/totalsegmentator.py
 WORKDIR /app

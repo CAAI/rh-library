@@ -5,6 +5,7 @@ data = {
     #"in_file": "/homes/claes/projects/LowdosePET/Cu64DOTATATE/Data/mnc/DOTA_000/CT.nii",
     "in_file": "/homes/hinge/Projects/rh-library/nodes/totalsegmentator/testlarge.nii.gz",#"/homes/hinge/lymphoma/data/raw/RIS_PACS/LM12533_02/CTres_crop.nii.gz",#"/homes/claes/projects/LowdosePET/PE2I/data_Vision/nii/0rCyjRXXbm_0/ACCT.nii.gz",
     'fast': True,
+    "task":"body",
    # 'roi_subset': 'brain skull',
     'out_segmentation': 'test.nii.gz'
 }

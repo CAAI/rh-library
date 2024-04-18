@@ -10,6 +10,7 @@ class TotalSegmentatorInput(BaseModel):
     in_file:FilePath
     fast:Optional[bool]=False
     roi_subset:Optional[str]=""
+    task:str="total"
 
 class TotalSegmentatorOutput(BaseModel):
     out_segmentation:FilePath
@@ -24,20 +25,20 @@ class TotalSegmentatorNode(RHNode):
     required_num_threads = 2
     required_gb_memory = 12    
 
-    def process(inputs, job):
+    def process(inputs:TotalSegmentatorInput, job) -> TotalSegmentatorOutput:
         out_file = job.directory / 'segmentation.nii.gz'
-
-        cmd = ["TotalSegmentator", "-i", str(inputs.in_file), "-o", str(out_file)]
+        
+        cmd = ["TotalSegmentator", "-i", str(inputs.in_file), "-o", str(out_file), "-ta", inputs.task]
 
         cmd_args = ["--ml"]
         
         if inputs.fast:
             cmd_args += ['--fast']
         
-        shape = nib.load(str(inputs.in_file)).shape
-        if shape[-1] > 590:
-            print("Large image, running with --body_seg --force_split --nr_thr_saving 1")
-            cmd_args+=["--body_seg","--force_split","--nr_thr_saving","1"]
+        #shape = nib.load(str(inputs.in_file)).shape
+        # if shape[-1] > 590:
+        #     print("Large image, running with --body_seg --force_split --nr_thr_saving 1")
+        #     cmd_args+=["--body_seg","--force_split","--nr_thr_saving","1"]
 
         if not inputs.roi_subset == "":
             cmd_args += ['--roi_subset'] + inputs.roi_subset.split(" ")

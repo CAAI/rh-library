@@ -11,7 +11,9 @@ class TotalSegmentatorInput(BaseModel):
     fast:Optional[bool]=False
     roi_subset:Optional[str]=""
     task:str="total"
-
+    body_seg:Optional[bool]=False
+    force_split:Optional[bool]=False
+    
 class TotalSegmentatorOutput(BaseModel):
     out_segmentation:FilePath
     out_version:str
@@ -34,7 +36,11 @@ class TotalSegmentatorNode(RHNode):
         
         if inputs.fast:
             cmd_args += ['--fast']
-        
+        if inputs.body_seg:
+            cmd_args += ['--body_seg']
+        if inputs.force_split:
+            cmd_args += ['--force_split']
+            
         #shape = nib.load(str(inputs.in_file)).shape
         # if shape[-1] > 590:
         #     print("Large image, running with --body_seg --force_split --nr_thr_saving 1")

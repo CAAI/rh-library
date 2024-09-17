@@ -9,9 +9,9 @@ data = {
 node = RHJob(
     node_name="public_glio",
     inputs=data,
-    #manager_address="aims:9030",
+    manager_address="aims:9030",
     #node_address='localhost:9050',
-    node_address='localhost:8010',
+    #node_address='localhost:8010',
     check_cache=False
 )
 # Wait for the node to finish

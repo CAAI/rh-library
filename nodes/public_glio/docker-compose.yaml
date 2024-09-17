@@ -1,0 +1,97 @@
+version: "1"
+services:
+
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "9050:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "9051:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  #Queue Node
+  manager:
+    image: rhnode/manager:v1.2.0
+
+    expose:
+    - "8000"
+
+    labels:
+      - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
+
+    environment:
+      #RH_OTHER_ADDRESSES: "mydomain:9050"
+      RH_NAME: "myhost"
+      RH_MEMORY: 12
+      RH_GPU_MEM: "8"
+      RH_NUM_THREADS: 6
+
+  #HD BET Node
+  hdbet:
+    image: rhnode/hdbet:v1.1.0_rhnode1.2.0
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+
+    labels:
+      - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
+
+  #FLIRT node
+  flirt:
+    image: rhnode/flirt:v0.2.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.flirt.rule=PathPrefix(`/flirt`)"
+
+  #reorient2std node
+  reorient2std:
+    image: rhnode/reorient2std:v0.3.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.reorient2std.rule=PathPrefix(`/reorient2std`)"
+
+  # ConvertXFM node
+  convertxfm:
+    image: rhnode/convertxfm:v0.2.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.convertxfm.rule=PathPrefix(`/convertxfm`)"
+  
+  public_glio:
+    image: rhnode/public_glio:v0.1.0
+    build: 
+      context: .
+      shm_size: '24gb'
+    shm_size: '24gb'
+    expose:
+      - "8000"
+    ports:
+      - "8010:8000"
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+    labels:
+      - "traefik.http.routers.public_glio.rule=PathPrefix(`/public_glio`)" 
+

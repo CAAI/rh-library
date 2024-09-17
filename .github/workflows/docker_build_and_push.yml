@@ -47,6 +47,9 @@ jobs:
           elif [[ "$VAL" == aims-* ]]; then
             echo "dir=nodes/aims" >> $GITHUB_OUTPUT
             echo "image_name=aims" >> $GITHUB_OUTPUT
+          elif [[ "$VAL" == public_glio-* ]]; then
+            echo "dir=nodes/public_glio" >> $GITHUB_OUTPUT
+            echo "image_name=public_glio" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == totalsegmentator-* ]]; then
             echo "dir=nodes/totalsegmentator" >> $GITHUB_OUTPUT
             echo "image_name=totalsegmentator" >> $GITHUB_OUTPUT

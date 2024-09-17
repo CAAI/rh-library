@@ -203,7 +203,7 @@ services:
 
   #totalsegmentator Node
   totalsegmentator:
-    image: rhnode/totalsegmentator:v1.0.0_rhnode1.2.0
+    image: rhnode/totalsegmentator-v1.0.2_rhnode1.2.0
     expose:
       - "8000"
     labels:
@@ -249,6 +249,29 @@ services:
       - "8000"
     labels:
       - "traefik.http.routers.pe2idenoiser.rule=PathPrefix(`/pe2idenoiser`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #public_glio Node
+  public_glio:
+    image: rhnode/public_glio:v0.1.0_rhnode1.2.0
+    depends_on:
+      - hdbet
+      - reorient2std
+      - convertxfm
+      - flirt
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.public_glio.rule=PathPrefix(`/public_glio`)"
     deploy:
       resources:
         reservations:

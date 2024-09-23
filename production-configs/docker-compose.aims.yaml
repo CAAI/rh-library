@@ -221,7 +221,7 @@ services:
 
   #synthseg Node
   synthseg:
-    image: rhnode/synthseg:v1.0.1_rhnode1.2.0
+    image: rhnode/synthseg:v1.0.3_rhnode1.2.0
     expose:
       - "8000"
     labels:

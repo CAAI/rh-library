@@ -74,7 +74,6 @@ services:
       - "traefik.http.routers.convertxfm.rule=PathPrefix(`/convertxfm`)"
   
   public_glio:
-    image: rhnode/public_glio:v0.1.0
     build: 
       context: .
       shm_size: '24gb'

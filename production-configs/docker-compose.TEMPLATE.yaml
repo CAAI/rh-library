@@ -223,3 +223,61 @@ services:
     environment:
       RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
       TZ: "Europe/Copenhagen"
+
+  #public_glio Node
+  public_glio:
+    image: rhnode/public_glio:v0.1.0_rhnode1.2.0
+    depends_on:
+      - hdbet
+      - reorient2std
+      - convertxfm
+      - flirt
+    shm_size: '24gb'
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.public_glio.rule=PathPrefix(`/public_glio`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #Totalsegmentator Node
+  totalsegmentator:
+    image: rhnode/totalsegmentator:v1.0.2_rhnode1.2.0
+    shm_size: '24gb'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+      
+    labels:
+      - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)"
+
+  #SynthSeg Node
+  synthseg:
+    image: rhnode/synthseg:v1.0.1_rhnode1.2.0
+    shm_size: '24gb'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+      
+    labels:
+      - "traefik.http.routers.synthseg.rule=PathPrefix(`/synthseg`)"

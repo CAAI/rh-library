@@ -218,6 +218,23 @@ services:
     labels:
       - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)"
 
+  #SynthSeg Node
+  synthseg:
+    image: rhnode/synthseg:v1.0.1_rhnode1.2.0
+    shm_size: '24gb'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+      
+    labels:
+      - "traefik.http.routers.synthseg.rule=PathPrefix(`/synthseg`)"
+
   #public_glio Node
   public_glio:
     image: rhnode/public_glio:v0.1.0_rhnode1.2.0

@@ -2,6 +2,7 @@ from rhnode import RHJob
 
 data = {
     "in_file": "/depict/data/ventricles/rawdata/sub-PAT001/ses-20210824/anat/sub-PAT001_ses-20210824_FLAIR.nii.gz",
+    "out_segmentation": 'out_synthseg.nii.gz'
 }
 
 node = RHJob(

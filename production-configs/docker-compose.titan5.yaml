@@ -215,7 +215,7 @@ services:
       - "8000"
       
     labels:
-      - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)
+      - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)"
 
   #public_glio Node
   public_glio:

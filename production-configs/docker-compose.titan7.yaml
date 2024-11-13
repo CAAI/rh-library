@@ -184,7 +184,7 @@ services:
 
   #Totalsegmentator Node
   totalsegmentator:
-    image: rhnode/totalsegmentator:v1.0.2_rhnode1.2.0
+    image: rhnode/totalsegmentator:v1.0.5_rhnode1.3.0a.7
     shm_size: '24gb'
     deploy:
       resources:
@@ -197,7 +197,7 @@ services:
       - "8000"
       
     labels:
-      - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)"
+      - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)
 
   #SynthSeg Node
   synthseg:

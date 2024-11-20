@@ -1,0 +1,5 @@
+nibabel
+numpy
+pydantic<2
+tensorflow-gpu==2.2.3
+protobuf==3.20.*

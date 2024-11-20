@@ -1,0 +1,59 @@
+version: "1"
+services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "9080:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "9081:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  #Queue Node
+  manager:
+    image: rhnode/manager:v1.2.0
+
+    expose:
+    - "8000"
+
+    labels:
+      - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
+
+    environment:
+      #RH_OTHER_ADDRESSES: "mydomain:9050"
+      RH_NAME: "myhost"
+      RH_MEMORY: 12
+      RH_GPU_MEM: "8"
+      RH_NUM_THREADS: 6
+
+  #FLIRT node
+  flirt:
+    image: rhnode/flirt:v0.2.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.flirt.rule=PathPrefix(`/flirt`)"
+
+  #DeepDixon Node 
+  deepdixon_2020:
+    build: .
+    labels:
+      - "traefik.http.routers.deepdixon_2020.rule=PathPrefix(`/deepdixon_2020`)"
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+
+    expose:
+      - "8000"

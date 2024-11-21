@@ -244,7 +244,7 @@ services:
 
   #deepdixon_2020 Node
   deepdixon_2020:
-    image: rhnode/deepdixon_2020:v1.0.0_rhnode1.2.0
+    image: rhnode/deepdixon_2020:v1.0.1_rhnode1.2.0
     expose:
       - "8000"
     labels:

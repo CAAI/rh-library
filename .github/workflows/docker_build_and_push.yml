@@ -35,6 +35,9 @@ jobs:
           if [[ "$VAL" == zerodose-* ]]; then
             echo "dir=nodes/zerodose" >> $GITHUB_OUTPUT
             echo "image_zerodose" >> $GITHUB_OUTPUT
+          elif [[ "$VAL" == deepdixon_2020-* ]]; then
+            echo "dir=nodes/deepdixon_2020" >> $GITHUB_OUTPUT
+            echo "image_name=deepdixon_2020" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == hdbet-* ]]; then
             echo "dir=nodes/hdbet" >> $GITHUB_OUTPUT
             echo "image_name=hdbet" >> $GITHUB_OUTPUT

@@ -106,7 +106,7 @@ class DeepDixonNode(RHNode):
     input_spec = DeepDixonInput
     output_spec = DeepDixonOutput
     name = "deepdixon_2020"
-    required_gb_gpu_memory = 8
+    required_gb_gpu_memory = 6
     required_num_threads = 2
     required_gb_memory = 8
 

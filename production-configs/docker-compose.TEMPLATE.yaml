@@ -250,7 +250,7 @@ services:
 
   #Totalsegmentator Node
   totalsegmentator:
-    image: rhnode/totalsegmentator:v1.0.2_rhnode1.2.0
+    image: rhnode/totalsegmentator:v1.0.5_rhnode1.3.0a.7
     shm_size: '24gb'
     deploy:
       resources:
@@ -281,3 +281,21 @@ services:
       
     labels:
       - "traefik.http.routers.synthseg.rule=PathPrefix(`/synthseg`)"
+
+  #deepdixon_2020 Node
+  deepdixon_2020:
+    image: rhnode/deepdixon_2020:v1.0.1_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.deepdixon_2020.rule=PathPrefix(`/deepdixon_2020`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"

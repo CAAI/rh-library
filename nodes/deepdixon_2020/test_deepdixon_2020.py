@@ -7,7 +7,8 @@ data = {
 
 node = RHJob(
     node_name="deepdixon_2020",
-    node_address='localhost:9080',
+    #node_address='localhost:9080',
+    node_address='titan6:9030',
     inputs = data,
 )
 node.start()

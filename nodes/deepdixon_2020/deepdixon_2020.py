@@ -13,6 +13,7 @@ import tensorflow as tf
 class DeepDixonInput(BaseModel):
     in_phase:FilePath
     out_phase:FilePath
+    mMR_version:str = 'E11'
 
 class DeepDixonOutput(BaseModel):
     deepdixon:FilePath
@@ -30,25 +31,34 @@ def cutup(data, blck, strd):
     data6 = stride_tricks.as_strided(data, strides=strides, shape=dims)
     return data6
     
-def resample_images(dataset1_nib,dataset2_nib):
+def resample_images(dataset1_nib,dataset2_nib,version):
     
     dataset1 = dataset1_nib.get_fdata()
     dataset2 = dataset2_nib.get_fdata()
     
-    sub1 = dataset1[96:288,6:198,:]
-    sub2 = dataset2[96:288,6:198,:]
+    if version == 'E11':
+        sub1 = dataset1[96:288,6:198,:]
+        sub2 = dataset2[96:288,6:198,:]
+        swap1 = np.swapaxes(sub1,0,2)
+        swap2 = np.swapaxes(sub2,0,2)
+        
+        flip1 = np.flipud(swap1)
+        flip2 = np.flipud(swap2)
+        
+        flip1 = np.fliplr(flip1)
+        flip2 = np.fliplr(flip2)
+        
+        flip1 = np.flip(flip1, 2).astype(np.float32)
+        flip2 = np.flip(flip2, 2).astype(np.float32)
+        
+    elif version == 'B20P':
+        sub1 = dataset1[64:256,32:224,:]
+        sub2 = dataset2[64:256,32:224,:]
     
-    swap1 = np.swapaxes(sub1,0,2)
-    swap2 = np.swapaxes(sub2,0,2)
-    
-    flip1 = np.flipud(swap1)
-    flip2 = np.flipud(swap2)
-    
-    flip1 = np.fliplr(flip1)
-    flip2 = np.fliplr(flip2)
-    
-    flip1 = np.flip(flip1, 2).astype(np.float32)
-    flip2 = np.flip(flip2, 2).astype(np.float32)
+        swap1 = np.swapaxes(sub1,0,2)
+        swap2 = np.swapaxes(sub2,0,2)
+        flip1 = np.fliplr(swap1)
+        flip2 = np.fliplr(swap2)
     
     return flip1,flip2
 
@@ -106,14 +116,23 @@ class DeepDixonNode(RHNode):
     input_spec = DeepDixonInput
     output_spec = DeepDixonOutput
     name = "deepdixon_2020"
-    required_gb_gpu_memory = 12
+    required_gb_gpu_memory = 6
     required_num_threads = 2
     required_gb_memory = 12
 
     def process(inputs,
                 job):
+        
+        if inputs.mMR_version == 'E11':
+            isoxfm = 1.3021
+            model_name = 'DeepDixon_VE11P_model1_TF2.h5'
+        elif inputs.mMR_version == 'B20P':
+            isoxfm = 1.5626
+            model_name = 'DeepDixon_VB20P_TF2.h5'
+        else:
+            raise ValueError('Software version not implemented: ', inputs.mMR_version)
 
-        input_flirt = {'xargs': '-applyisoxfm 1.3021'}
+        input_flirt = {'xargs': f'-applyisoxfm {isoxfm}'}
 
         rsl = {}
         for mr_name, mr in zip(['in_phase','out_phase'],[inputs.in_phase, inputs.out_phase]):
@@ -135,19 +154,23 @@ class DeepDixonNode(RHNode):
         # Load and resample
         out_phase = nib.load(rsl['out_phase'])
         in_phase = nib.load(rsl['in_phase'])
-        out_phase_rsl,in_phase_rsl = resample_images(out_phase, in_phase)
+        out_phase_rsl,in_phase_rsl = resample_images(out_phase, in_phase, version=inputs.mMR_version)
 
         # Load all patches
         patches = get_patches_znorm(in_phase_rsl,out_phase_rsl, normalize_both=True)
         
         # Predict
-        model = tf.keras.models.load_model('/models/DeepDixon/DeepDixon_VE11P_model1_TF2.h5',compile=False)
+        model = tf.keras.models.load_model(f'/models/DeepDixon/{model_name}',compile=False)
         DeepX = predict(model, patches, out_shape=in_phase_rsl.shape)
 
         # Rehape to in-phase resolution
-        DeepX = np.swapaxes(np.flipud(np.fliplr(np.flip(DeepX,2))),2,0)
         DeepX_padded = np.zeros(out_phase.shape)
-        DeepX_padded[96:288,6:198,:] = DeepX
+        if inputs.mMR_version == 'E11':
+            DeepX = np.swapaxes(np.flipud(np.fliplr(np.flip(DeepX,2))),2,0)
+            DeepX_padded[96:288,6:198,:] = DeepX
+        elif inputs.mMR_version == 'B20P':
+            DeepX = np.swapaxes(np.fliplr(DeepX),2,0)
+            DeepX_padded[64:256,32:224,:] = DeepX
         DeepX_nii = nib.Nifti1Image(DeepX_padded,out_phase.affine, out_phase.header)
         out_deepdixon = job.directory / "DeepDixon.nii.gz"
         nib.save(DeepX_nii, out_deepdixon)

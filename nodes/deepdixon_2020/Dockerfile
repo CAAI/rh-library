@@ -24,7 +24,7 @@ RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0
 # Model requirements
 RUN mkdir -p /models
 RUN curl "http://resolute.pet.rh.dk:8000/models_01sep2020.zip" | bsdtar -xvf- -C /
-RUN rm -rf /models/DeepUTE /models/DeepT1 /models/DeepDixon/*VB20*
+RUN rm -rf /models/DeepUTE /models/DeepT1
 
 # Changes frequently
 COPY requirements.txt /app/requirements.txt

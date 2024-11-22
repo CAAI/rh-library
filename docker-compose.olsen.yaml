@@ -1,0 +1,53 @@
+services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "9030:80" ## 30=Research, 40=Production
+      # The Web UI (enabled by --api.insecure=true)
+      - "9031:8080" ## 31=Research, 41=Production
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #Queue Node
+  manager:
+    image: rhnode/manager:v1.2.0
+    expose:
+    - "8000"
+    labels:
+      - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
+    environment:
+      RH_OTHER_ADDRESSES:
+      RH_NAME: olsen
+      RH_MEMORY: 256
+      RH_GPU_MEM: "15"
+      RH_NUM_THREADS: 32
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #HD BET Node
+  hdbet:
+    image: rhnode/hdbet:v1.1.0_rhnode1.2.0
+    depends_on:
+      - manager
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
+    environment:
+      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      TZ: "Europe/Copenhagen"

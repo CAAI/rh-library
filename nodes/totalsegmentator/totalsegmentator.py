@@ -13,6 +13,8 @@ class TotalSegmentatorInput(BaseModel):
     task:str="total"
     body_seg:Optional[bool]=False
     force_split:Optional[bool]=False
+    remove_small_blobs:Optional[bool]=False
+    output_type:Optional[str]='nifti'
     
 class TotalSegmentatorOutput(BaseModel):
     out_segmentation:FilePath
@@ -29,7 +31,7 @@ class TotalSegmentatorNode(RHNode):
 
     def process(inputs:TotalSegmentatorInput, job) -> TotalSegmentatorOutput:
         out_file = job.directory / 'segmentation.nii.gz'
-        
+
         cmd = ["TotalSegmentator", "-i", str(inputs.in_file), "-o", str(out_file), "-ta", inputs.task]
 
         cmd_args = ["--ml"]
@@ -40,6 +42,10 @@ class TotalSegmentatorNode(RHNode):
             cmd_args += ['--body_seg']
         if inputs.force_split:
             cmd_args += ['--force_split']
+        if inputs.remove_small_blobs:
+            cmd_args += ['--remove_small_blobs']
+        if inputs.output_type == 'dicom':
+            cmd_args += ['--output_type', 'dicom']
             
         #shape = nib.load(str(inputs.in_file)).shape
         # if shape[-1] > 590:

@@ -49,5 +49,25 @@ services:
     labels:
       - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
     environment:
-      RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #HD CTBET Node
+  hdctbet:
+    image: rhnode/hdctbet:v1.1.0_rhnode1.2.0
+    depends_on:
+      - manager
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.hdctbet.rule=PathPrefix(`/hdctbet`)"
+    environment:
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
       TZ: "Europe/Copenhagen"

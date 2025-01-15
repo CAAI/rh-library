@@ -18,6 +18,7 @@ Other tools, packaged in rh-node.
 | **node** | **description** | **dependencies** | **project** |
 |---|---|---|---|
 | [hdbet](nodes/hdbet) | MRI brain extraction |  | https://github.com/MIC-DKFZ/HD-BET |
+| [synthseg](nodes/synthseg) | MRI brain segmentation |  | https://github.com/BBillot/SynthSeg |
 | [reorient2std](nodes/reorient2std) | (FSL) Reorient to standard orientation |  | https://fsl.fmrib.ox.ac.uk/fsl |
 | [flirt](nodes/flirt) | (FSL) Registration and resampling |  | https://fsl.fmrib.ox.ac.uk/fsl |
 | [convertxfm](nodes/convertXFM) | (FSL) Modify XFM files |  | https://fsl.fmrib.ox.ac.uk/fsl |

@@ -77,9 +77,6 @@ jobs:
           elif [[ "$VAL" == zerodose_dicom-* ]]; then
             echo "dir=dicom_nodes/zerodose" >> $GITHUB_OUTPUT
             echo "image_name=zerodose_dicom" >> $GITHUB_OUTPUT
-          elif [[ "$VAL" == synthseg-* ]]; then
-            echo "dir=nodes/synthseg" >> $GITHUB_OUTPUT
-            echo "image_name=synthseg" >> $GITHUB_OUTPUT 
           else
             echo "valid=false" >> $GITHUB_OUTPUT
           fi

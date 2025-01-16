@@ -17,7 +17,7 @@ services:
 
   #Queue Node
   manager:
-    image: rhnode/manager:v1.2.0
+    image: rhnode/manager:v1.3.0-a.7
 
     expose:
     - "8000"
@@ -38,7 +38,7 @@ services:
       context: .
       shm_size: '24gb'
     shm_size: '24gb'
-    image: rhnode/totalsegmentator:v1.0.1_rhnode1.2.0
+    #image: rhnode/totalsegmentator:v1.0.1_rhnode1.2.0
     deploy:
       resources:
         reservations:

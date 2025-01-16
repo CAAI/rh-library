@@ -10,6 +10,8 @@ RUN python -c "from totalsegmentator.libs import download_pretrained_weights; [d
 # #RH-Node
 
 RUN pip install git+https://github.com/CAAI/rh-node.git@v1.3.0-a.7
+COPY requirements.txt /app/requirements.txt
+RUN pip install -r /app/requirements.txt
 COPY totalsegmentator.py /app/totalsegmentator.py
 WORKDIR /app
 ENV PYTHONUNBUFFERED 1

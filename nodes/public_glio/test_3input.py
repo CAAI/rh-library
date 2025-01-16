@@ -3,7 +3,8 @@ from rhnode import RHJob
 data = {
     "t1c": "/homes/claes/projects/github/DEPICT-RH/public_glio/test/resliced_CT1.nii.gz",
     "flair": "/homes/claes/projects/github/DEPICT-RH/public_glio/test/resliced_FLAIR.nii.gz",
-    "t2": "/homes/claes/projects/github/DEPICT-RH/public_glio/test/resliced_T2.nii.gz"
+    "t2": "/homes/claes/projects/github/DEPICT-RH/public_glio/test/resliced_T2.nii.gz",
+    "mask": "output_segmentation.nii.gz"
 }
 
 node = RHJob(

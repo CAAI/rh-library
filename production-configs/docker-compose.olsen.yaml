@@ -1,0 +1,192 @@
+services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - "9030:80" ## 30=Research, 40=Production
+      # The Web UI (enabled by --api.insecure=true)
+      - "9031:8080" ## 31=Research, 41=Production
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #Queue Node
+  manager:
+    image: rhnode/manager:v1.2.0
+    expose:
+    - "8000"
+    labels:
+      - "traefik.http.routers.manager.rule=PathPrefix(`/manager`) || Path(`/`)"
+    environment:
+      RH_OTHER_ADDRESSES:
+      RH_NAME: olsen
+      RH_MEMORY: 256
+      RH_GPU_MEM: "15"
+      RH_NUM_THREADS: 32
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #HD BET Node
+  hdbet:
+    image: rhnode/hdbet:v1.1.0_rhnode1.2.0
+    depends_on:
+      - manager
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.hdbet.rule=PathPrefix(`/hdbet`)"
+    environment:
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #HD CTBET Node
+  hdctbet:
+    image: rhnode/hdctbet:v1.1.0_rhnode1.2.0
+    depends_on:
+      - manager
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.hdctbet.rule=PathPrefix(`/hdctbet`)"
+    environment:
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #Totalsegmentator Node
+  totalsegmentator:
+    image: rhnode/totalsegmentator:v1.0.6_rhnode1.3.0a.7
+    shm_size: '24gb'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    expose:
+      - "8000"
+
+    labels:
+      - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)"
+
+  #FLIRT node
+  flirt:
+    image: rhnode/flirt:v0.2.0_rhnode1.2.0
+    depends_on:
+      - manager
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.flirt.rule=PathPrefix(`/flirt`)"
+    environment:
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  # ConvertXFM node
+  convertxfm:
+    image: rhnode/convertxfm:v0.2.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.convertxfm.rule=PathPrefix(`/convertxfm`)"
+
+  # fslmaths node
+  fslmaths:
+    image: rhnode/fslmaths:v0.1.0_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.fslmaths.rule=PathPrefix(`/fslmaths`)"
+
+  #reorient2std node
+  reorient2std:
+    image: rhnode/reorient2std:v0.3.0_rhnode1.2.0
+    depends_on:
+      - manager
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.reorient2std.rule=PathPrefix(`/reorient2std`)"
+    environment:
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #deepdixon_2020 Node
+  deepdixon_2020:
+    image: rhnode/deepdixon_2020:v1.0.2_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.deepdixon_2020.rule=PathPrefix(`/deepdixon_2020`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #synthseg Node
+  synthseg:
+    image: rhnode/synthseg:v1.0.4_rhnode1.2.0
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.synthseg.rule=PathPrefix(`/synthseg`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: ulrich.lindberg@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #public_glio Node
+  public_glio:
+    image: rhnode/public_glio:v0.1.0_rhnode1.2.0
+    depends_on:
+      - hdbet
+      - reorient2std
+      - convertxfm
+      - flirt
+    shm_size: '24gb'
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.public_glio.rule=PathPrefix(`/public_glio`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"

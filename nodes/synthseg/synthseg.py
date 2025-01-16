@@ -9,6 +9,7 @@ class SynthSegInput(BaseModel):
     parc: Optional[bool]=False
     robust: Optional[bool]=False
     ct: Optional[bool]=False
+    cpu: Optional[bool]=False
     # vol: Optional[str]=""
     # qc: Optional[str]=""
     # resample: Optional[str]=""
@@ -46,6 +47,8 @@ class SynthSegNode(RHNode):
             cmd_args += ['--robust']
         if inputs.ct:
             cmd_args += ['--ct']
+        if inputs.cpu:
+            cmd_args += ['--cpu']
         """
         if inputs.vol != "":
             vol_file = job.directory / (inputs.vol+'.csv') if not str(inputs.vol).endswith('.csv') else job.directory / inputs.vol

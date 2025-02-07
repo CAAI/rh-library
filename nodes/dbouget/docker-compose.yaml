@@ -36,6 +36,7 @@ services:
   dbouget:
     build: 
       context: .
+    image: rhnode/dbouget:v1.0.0_rhnode1.3.0-a.7
     deploy:
       resources:
         reservations:

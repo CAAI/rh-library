@@ -40,7 +40,11 @@ services:
       context: .
       shm_size: '24gb'
     shm_size: '24gb'
+<<<<<<< HEAD
     image: rhnode/synthseg:v1.0.4_rhnode1.2.0
+=======
+    image: rhnode/synthseg:v1.0.3_rhnode1.2.0
+>>>>>>> 34834aed7866697621b14fa2929ad4f6c1ba60c9
     deploy:
       resources:
         reservations:

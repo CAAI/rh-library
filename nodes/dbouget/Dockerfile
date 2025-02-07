@@ -36,8 +36,11 @@ COPY requirements.txt /app/requirements.txt
 RUN python3.8 -m pip install -r /app/requirements.txt
 
 # Download model weights
+# gdown fails to automatically download the weights. Instead, manually download the weights and put them in the node folder and call the file: mri_brain-tumor_segmentation-models.zip
+# LINK:
+# https://drive.google.com/uc?id=1QJZWF9CzgOiYzjzsRSu2LOkrzi2S6j_U
 COPY mri_brain_tumor_segmentation_setup.py /app/mri_brain_tumor_segmentation/setup_noDownload.py
-COPY mri_brain-tumor_segmentation-models.zip /app/mri_brain_tumor_segmentation/models.zip
+#COPY mri_brain-tumor_segmentation-models.zip /app/mri_brain_tumor_segmentation/models.zip
 RUN python3.6 /app/mri_brain_tumor_segmentation/setup_noDownload.py
 
 ENV PYTHONPATH="${PYTHONPATH}:/app/mri_brain_tumor_segmentation"

@@ -298,7 +298,6 @@ services:
               capabilities: [gpu]
     environment:
       RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
-<<<<<<< HEAD
       TZ: "Europe/Copenhagen"
 
   #dbouget Node
@@ -317,6 +316,4 @@ services:
               capabilities: [gpu]
     environment:
       RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
-=======
->>>>>>> 34834aed7866697621b14fa2929ad4f6c1ba60c9
       TZ: "Europe/Copenhagen"

@@ -104,12 +104,22 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
-        if : ${{steps.step1.outputs.valid == 'true'}}
+          
+      - name: Build and push (standard images)
+        if: steps.step1.outputs.valid == 'true' && steps.step1.outputs.image_name != 'totalsegmentator'
         uses: docker/build-push-action@v4
         with:
           context: "{{defaultContext}}:${{steps.step1.outputs.dir}}"
           push: true
           tags: rhnode/${{steps.step1.outputs.image_name}}:${{ steps.split.outputs.version }}
           
+      - name: Build and push (totalsegmentator with secret)
+        if: steps.step1.outputs.valid == 'true' && steps.step1.outputs.image_name == 'totalsegmentator'
+        uses: docker/build-push-action@v4
+        with:
+          context: "{{defaultContext}}:${{steps.step1.outputs.dir}}"
+          push: true
+          tags: rhnode/${{steps.step1.outputs.image_name}}:${{ steps.split.outputs.version }}
+          build-args: |
+            LICENSE_KEY=${{ secrets.TOTALSEG_LICENSE_KEY }}
+

@@ -1,11 +1,13 @@
 #System
 FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+ARG LICENSE_KEY
 RUN apt-get update
 RUN apt-get install git -y
 
 # #General requirements
 RUN pip install git+https://github.com/wasserth/TotalSegmentator.git
-RUN python -c "from totalsegmentator.libs import download_pretrained_weights; [download_pretrained_weights(task_id) for task_id in [291, 292, 293, 294, 295, 297, 298, 258, 150, 260, 503, 315, 299, 300]]"
+RUN totalseg_set_license -l ${LICENSE_KEY}
+RUN python -c "from totalsegmentator.libs import download_pretrained_weights; [download_pretrained_weights(task_id) for task_id in [291,292,293,294,295,297,298,299,300,775,776,777,778,779,351,789,527,552,955,956,957,850,851,852,853,597,598,756,258,200,201,150,260,315,8,913,570,576,115,952,304,855,301,303,481,485,305,925,856,409,857,507,920]]"
 
 # #RH-Node
 

@@ -25,9 +25,9 @@ class SynthmorphNode(RHNode):
     input_spec = SynthmorphInputs
     output_spec = SynthmorphOutputs
     name = "synthmorph"
-    required_gb_gpu_memory = 10 # Probably higher!
-    required_num_threads = 1
-    required_gb_memory = 8 
+    required_gb_gpu_memory = 15 # Probably higher!
+    required_num_threads = 2
+    required_gb_memory = 64
 
     @staticmethod
     def process(inputs, job):

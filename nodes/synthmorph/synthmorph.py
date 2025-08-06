@@ -13,6 +13,7 @@ class SynthmorphInputs(BaseModel):
     fixed_file: FilePath = None # Required for 'register' command
     init_file: Optional[FilePath] = None # Required for 'apply' command
     xargs: Optional[str] = ''
+    use_gpu: bool = True
 
 
 class SynthmorphOutputs(BaseModel):
@@ -25,7 +26,7 @@ class SynthmorphNode(RHNode):
     input_spec = SynthmorphInputs
     output_spec = SynthmorphOutputs
     name = "synthmorph"
-    required_gb_gpu_memory = 15 # Probably higher!
+    required_gb_gpu_memory = 11 # Probably higher!
     required_num_threads = 2
     required_gb_memory = 64
 
@@ -101,7 +102,10 @@ class SynthmorphNode(RHNode):
                 )
             
             all_env_vars = os.environ.copy()
-            all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})
+            if inputs.use_gpu:
+                all_env_vars.update({"CUDA_VISIBLE_DEVICES": str(job.device)})
+            else:
+                all_env_vars.update({"CUDA_VISIBLE_DEVICES": ""})
             out = subprocess.check_output(cmd, text=True, env=all_env_vars)
             
             return SynthmorphOutputs(**out_args)

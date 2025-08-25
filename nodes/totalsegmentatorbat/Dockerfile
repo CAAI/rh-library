@@ -8,7 +8,6 @@ RUN pip install --upgrade pip
 RUN git clone https://github.com/depict-rh/bat-seg
 RUN pip install -e bat-seg
 
-
 RUN pip install git+https://github.com/CAAI/rh-node.git@v1.3.0-a.7
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
@@ -17,4 +16,4 @@ COPY totalsegmentatorbat.py /app/totalsegmentatorbat.py
 WORKDIR /app
 ENV PYTHONUNBUFFERED 1
 
-CMD ["uvicorn", "totalsegmentator:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "totalsegmentatorbat:app", "--host", "0.0.0.0", "--port", "8000"]

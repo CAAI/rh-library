@@ -59,6 +59,9 @@ jobs:
           elif [[ "$VAL" == totalsegmentator-* ]]; then
             echo "dir=nodes/totalsegmentator" >> $GITHUB_OUTPUT
             echo "image_name=totalsegmentator" >> $GITHUB_OUTPUT
+          elif [[ "$VAL" == totalsegmentatorbat-* ]]; then
+            echo "dir=nodes/totalsegmentatorbat" >> $GITHUB_OUTPUT
+            echo "image_name=totalsegmentatorbat" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == flirt-* ]]; then
             echo "dir=nodes/flirt" >> $GITHUB_OUTPUT
             echo "image_name=flirt" >> $GITHUB_OUTPUT

@@ -33,8 +33,6 @@ class TotalSegmentatorNode(RHNode):
 
         cmd_args = ["--ml"]
         
-        if inputs.fast:
-            cmd_args += ['--fast']
         if inputs.body_seg:
             cmd_args += ['--body_seg']
         if inputs.force_split:

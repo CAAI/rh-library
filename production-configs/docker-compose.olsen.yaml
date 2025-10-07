@@ -74,7 +74,7 @@ services:
 
   #Totalsegmentator Node
   totalsegmentator:
-    image: rhnode/totalsegmentator:v1.0.6_rhnode1.3.0a.7
+    image: rhnode/totalsegmentator:v1.1.4_rhnode1.3.0a.7
     shm_size: '24gb'
     deploy:
       resources:
@@ -85,7 +85,7 @@ services:
               capabilities: [gpu]
     expose:
       - "8000"
-
+      
     labels:
       - "traefik.http.routers.totalsegmentator.rule=PathPrefix(`/totalsegmentator`)"
 
@@ -117,7 +117,7 @@ services:
       - "8000"
     labels:
       - "traefik.http.routers.fslmaths.rule=PathPrefix(`/fslmaths`)"
-
+    
   #reorient2std node
   reorient2std:
     image: rhnode/reorient2std:v0.3.0_rhnode1.2.0
@@ -184,7 +184,7 @@ services:
     environment:
       RH_EMAIL_ON_ERROR: claes.noehr.ladefoged@regionh.dk
       TZ: "Europe/Copenhagen"
-
+  
   #public_glio Node
   public_glio:
     image: rhnode/public_glio:v0.1.0_rhnode1.2.0
@@ -207,4 +207,22 @@ services:
               capabilities: [gpu]
     environment:
       RH_EMAIL_ON_ERROR: thomas.lund.andersen@regionh.dk
+      TZ: "Europe/Copenhagen"
+
+  #synthmorph Node
+  synthmorph:
+    image: rhnode/synthmorph:v1.0.2_rhnode1.3.0a.7
+    expose:
+      - "8000"
+    labels:
+      - "traefik.http.routers.synthmorph.rule=PathPrefix(`/synthmorph`)"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      RH_EMAIL_ON_ERROR: ulrich.lindberg@regionh.dk
       TZ: "Europe/Copenhagen"

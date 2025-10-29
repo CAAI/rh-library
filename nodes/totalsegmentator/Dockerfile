@@ -1,5 +1,5 @@
 #System
-FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+FROM pytorch/pytorch:2.9.0-cuda12.8-cudnn9-runtime
 ARG LICENSE_KEY
 RUN apt-get update
 RUN apt-get install git -y

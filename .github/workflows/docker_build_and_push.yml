@@ -80,6 +80,9 @@ jobs:
           elif [[ "$VAL" == pe2idenoiser-* ]]; then
             echo "dir=nodes/pe2idenoiser" >> $GITHUB_OUTPUT
             echo "image_name=pe2idenoiser" >> $GITHUB_OUTPUT
+          elif [[ "$VAL" == brats-* ]]; then
+            echo "dir=nodes/BraTs" >> $GITHUB_OUTPUT
+            echo "image_name=brats" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == zerodose_dicom-* ]]; then
             echo "dir=dicom_nodes/zerodose" >> $GITHUB_OUTPUT
             echo "image_name=zerodose_dicom" >> $GITHUB_OUTPUT

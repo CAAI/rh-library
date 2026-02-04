@@ -11,7 +11,7 @@ RUN totalseg_set_license -l ${LICENSE_KEY}
 
 # #RH-Node
 
-RUN pip install git+https://github.com/CAAI/rh-node.git@v1.3.0-a.7
+RUN pip install git+https://github.com/CAAI/rh-node.git@v1.3.0-a.10
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 COPY totalsegmentator.py /app/totalsegmentator.py

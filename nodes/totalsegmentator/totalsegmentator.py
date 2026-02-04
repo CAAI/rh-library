@@ -61,7 +61,7 @@ class TotalSegmentatorNode(RHNode):
         print("TOTALSEGMENTATOR STARTING VERSION")
         version = subprocess.check_output("TotalSegmentator --version".split(" "),env=all_env_vars)        
         print("TOTALSEGMENTATOR STARTING SEGMENTATION")
-        out = subprocess.check_output(cmd+cmd_args, text=True,env=all_env_vars)
+        out = subprocess.check_output(cmd+cmd_args, text=True,env=all_env_vars,timeout=60*15)
         print("TOTALSEGMENTATOR ENDING")
 
         return TotalSegmentatorOutput(out_segmentation=out_file,out_version=version,out_args=" ".join(cmd_args))

@@ -1,12 +1,12 @@
 # System
-FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+FROM pytorch/pytorch:2.9.0-cuda12.8-cudnn9-runtime
 RUN apt-get update
 RUN apt-get install build-essential -y
 RUN apt-get install git -y
 RUN pip install --upgrade pip
 
 # RH-Node
-RUN pip install git+https://github.com/CAAI/rh-node.git@v1.1.1
+RUN pip install git+https://github.com/CAAI/rh-node.git@v1.3.0-a.10
 
 # General requirements
 RUN pip install git+https://github.com/CAAI/zerodose.git@c9627e6cad25e08fabeaee0baeb16c5fa246f3ba

@@ -34,7 +34,7 @@ jobs:
           echo "valid=true" >> $GITHUB_OUTPUT
           if [[ "$VAL" == zerodose-* ]]; then
             echo "dir=nodes/zerodose" >> $GITHUB_OUTPUT
-            echo "image_zerodose" >> $GITHUB_OUTPUT
+            echo "image_name=zerodose" >> $GITHUB_OUTPUT
           elif [[ "$VAL" == deepdixon_2020-* ]]; then
             echo "dir=nodes/deepdixon_2020" >> $GITHUB_OUTPUT
             echo "image_name=deepdixon_2020" >> $GITHUB_OUTPUT

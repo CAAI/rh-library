@@ -6,7 +6,7 @@ RUN apt-get install git -y
 #General requirements
 RUN git clone https://github.com/MIC-DKFZ/HD-BET
 RUN pip install ./HD-BET
-RUN python -c "from HD_BET import utils; [utils.maybe_download_parameters(i) for i in range(5)]"
+RUN python -c "from HD_BET import checkpoint_download; checkpoint_download.maybe_download_parameters()"
 
 #RH-Node
 RUN pip install git+https://github.com/CAAI/rh-node.git@v1.3.0-a.10

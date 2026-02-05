@@ -1,5 +1,5 @@
 #System
-FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+FROM pytorch/pytorch:2.10.0-cuda13.0-cudnn9-runtime
 RUN apt-get update
 RUN apt-get install git -y
 
@@ -9,7 +9,7 @@ RUN pip install ./HD-BET
 RUN python -c "from HD_BET import utils; [utils.maybe_download_parameters(i) for i in range(5)]"
 
 #RH-Node
-RUN pip install git+https://github.com/CAAI/rh-node.git@v1.2.0
+RUN pip install git+https://github.com/CAAI/rh-node.git@v1.3.0-a.10
 
 COPY hdbet.py /app/hdbet.py
 WORKDIR /app

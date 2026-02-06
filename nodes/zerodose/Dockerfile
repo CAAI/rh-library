@@ -9,7 +9,7 @@ RUN pip install --upgrade pip
 RUN pip install git+https://github.com/CAAI/rh-node.git@v1.3.0-a.10
 
 # General requirements
-RUN pip install git+https://github.com/CAAI/zerodose.git@c9627e6cad25e08fabeaee0baeb16c5fa246f3ba
+RUN pip install git+https://github.com/CAAI/zerodose
 RUN python -c "from zerodose import utils; utils._maybe_download_parameters(); utils._maybe_download_mni_template()"
 RUN pip install -U numpy
 
